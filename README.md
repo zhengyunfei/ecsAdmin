@@ -1,5 +1,5 @@
-# ScarAdmin
-电子排班系统后台项目源码
+# ScarAdmin /r/n
+电子排班系统后台项目源码<br>
 开发工具
 Intellij 2016
 开发语言
