@@ -1,0 +1,81 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="projectBO" type="com.zero2ipo.cfj.project.bo.ServiceProject"/>
+<resultMap class="projectBO" id="projectMap">
+	<result property="id" column="id"/>
+	<result property="name" column="name"/>
+	<result property="price" column="car_price"/>
+	<result property="orignPrice" column="jeep_price"/>
+	<result property="remark" column="info"/>
+	<result property="isMain" column="status"/>
+</resultMap>
+<select id='findServiceProjectList' resultMap='projectMap'>
+SELECT
+	id,	
+	name,	
+	car_price,
+	jeep_price,
+	info,
+	status
+FROM goodses
+
+</select>
+<select id='findServiceProject' resultMap='projectMap'>
+SELECT
+	id,	
+	name,	
+	car_price,
+	jeep_price,
+	info,
+	status
+FROM goodses
+where id=#id#
+
+</select>
+<select id='findServiceProjectCount' resultClass='java.lang.Integer'>
+SELECT
+	count(0)
+FROM goodses
+
+</select>
+
+
+<insert id="addServiceProject" parameterClass="projectBO">
+	INSERT INTO goodses(
+	id,
+	name,
+	car_price,
+	jeep_price,
+	info,
+	status
+)VALUES(
+	#name#,	
+	#price#,	
+	#orignPrice#,	
+	#remark#,
+	#isMain#	
+)
+</insert>
+<update id="updServiceProject" parameterClass="projectBO">
+	UPDATE
+		goodses
+	SET
+	name=#name#,	
+	car_price=#price#,
+	jeep_price=#orignPrice#,
+	info=#remark#	,
+	status=#isMain#
+ 	WHERE 
+	ID=#id#
+</update>
+<delete id="delServiceProject" parameterClass="java.util.Map">
+	DELETE FROM 
+		goodses
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</delete>
+</sqlMap>

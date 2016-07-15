@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+ 	<!-- 系统用户信息实体类(User) -->
+	<typeAlias alias="user" type="com.zero2ipo.plugins.user.bo.User"/>
+
+	<!-- 系统用户信息实体映射集合 -->
+	<resultMap id="userList" class="user">
+		<result property="userId" column="USER_ID"/>
+		<result property="userNo" column="USER_NO"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="userRealName" column="USER_REAL_NAME"/>
+		<result property="userPwd" column="USER_PWD"/>
+		<result property="curStatusCode" column="CUR_STATUS_CODE"/>
+		<result property="gender" column="GENDER"/>
+		<result property="position" column="POSITION"/>
+		<result property="tel" column="TEL"/>
+		<result property="mobile" column="MOBILE"/>
+		<result property="email" column="EMAIL"/>
+		<result property="ip" column="IP"/>
+		<result property="addDate" column="ADD_DATE"/>
+		<result property="addUser" column="ADD_USER"/>
+		<result property="expHintDate" column="EXP_HINT_DATE"/>
+		<result property="remark" column="REMARK"/>
+	</resultMap>
+
+	<!-- 根据用户名 密码查询系统用户信息 -->
+	<select id="login" resultClass="user">
+		 SELECT
+		 	  U.USER_ID AS userId,
+		      U.USER_NO AS userNo,
+		      U.USER_NAME AS userName,
+		      U.USER_REAL_NAME as userRealName,
+		      U.USER_PWD AS userPwd,
+		      U.CUR_STATUS_CODE AS curStatusCode,
+		      U.GENDER AS gender,
+		      U.POSITION AS position,
+		      U.TEL AS tel,
+		      U.MOBILE AS mobile,
+		      U.EMAIL AS email,
+		      U.IP AS ip,
+		      DATE_FORMAT(U.ADD_DATE,'%Y-%c-%d %H-%i-%s') AS addTime,
+		      U.ADD_USER AS addUser,
+		      U.EXP_HINT_DATE AS expHintDate,
+		      U.REMARK AS remark
+		 FROM
+		 	s9_sys_user U
+		 WHERE
+
+		  	 U.USER_NAME = #userName#
+	</select>
+</sqlMap>

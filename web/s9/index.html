@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>登录</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<style type="text/css">
+			/* reset */
+			body{line-height:1.666;background-color:#1370A6}
+			body,select,input,h1,h2,h3{font-size:12px}
+			body,input,select{font-family:verdana}
+			body,h1,h2,h3,ul,li,form,p,img{margin:0;padding:0;border:0}
+			input{margin:0;padding:0}
+			input,img{line-height:normal}
+			ul,li{list-style:none}
+			article,aside,footer,header,hgroup,nav,section{display: block}
+			a{color:#fff;text-decoration:none}
+			a:hover{text-decoration:underline}
+			.ipt-c{width:16px;height:16px;vertical-align:middle;padding:0}
+
+			.page,html,body{width:100%;height:100%}
+			.page{min-width:689px;min-height:435px;position:relative;+zoom:1}
+			/* 行内元素 */
+			.btn,
+			.copy-item,
+			.ico,
+			.tab-list{display:inline-block;+display:inline;+zoom:1;vertical-align:middle}
+			
+			/* 输入框 */
+			.ipt-wraper .ipt-c{visibility:hidden;position:absolute}
+			.ipt-wraper .ico-checkbox{position:relative;top:-1px;margin-right:3px}
+			
+			/* tab panel */
+			.tab-panel{width:460px;height:308px;border-color:#CDCDCD;border-width:0;background-color:#fff;;border-style:solid;position:relative;z-index:10;+zoom:1;box-shadow:0px 1px 5px RGBA(0,0,0,0.5)}
+			.tab-panel .form{padding:0 60px}
+			.tab-panel-locat{position:absolute;z-index:15;top:28px;left:-15px}
+
+			.tab-panel .shadow,
+			.tab-list .shadow{display:none}
+
+			/* 表单 */
+			.form{overflow:hidden;+zoom:1;color:#7A8698;line-height:normal}
+			.form a{color:#217DD9}
+			.form .hd{width:167px;height:24px;background-position:0 0}
+			.form .options{position:relative;+zoom:1}
+			.form .options label{margin-right:60px}
+			.form .options .help{line-height:0;display:inline-block;+display:inline;+zoom:1;vertical-align:middle;margin-left:4px}
+			.form .options .ext{position:absolute;right:0;top:0;color:#7A8698}
+			.form .ft{border-top:1px solid #C9D6DD;padding-top:11px}
+			.form .hd{margin-top:29px;}
+			.form .user,
+			.form .pass{margin-top:26px}
+			.form .options{margin-top:16px}
+			.form .ft{margin-top:25px}
+			/* 输入框 */
+			.ipt-t{line-height:0;font-size:0;border-radius:2px;position:relative;+zoom:1;height:46px;border:1px solid #BAC7D2;background-color:#ECF5FA;box-shadow:0 0 2px RGBA(0,46,115,.25) inset;font-family:"Microsoft Yahei";}
+			.ipt-t input{width:211px;outline:none;background:none;border:none;height:19px;margin:0;padding:13px 10px;_padding-bottom:10px;font-size:14px;line-height:normal;color:#000;font-weight:bold;margin-top;1px;}
+			.ipt-t label{position:absolute;left:0;top:12px;line-height:normal;font-size:16px;color:#90A2BC}
+			.ipt-t .domain{position:absolute;font-size:14px;font-weight:bold;font-family:verdana;height:46px;width:105px;border-left:1px solid #E0E9ED;text-align:center;color:#5E6F88;line-height:46px;background-color:#F7FBFD;right:0;top:0}
+			.ipt-t .btn-login{position:absolute;top:3px;right:3px}
+			.ipt-t-hover{border-color:#93afc6}
+			.ipt-t-hover label{color:#6C88B3}
+			.ipt-t-focus{border-color:#7dc4ff}
+			.ipt-t-focus label{color:#6D89B3}
+			/* 动画 */
+			.main h3,
+			.tab-panel-locat{-webkit-transition:all .3s;-moz-transition:all .3s;-o-transition:all .3s;-ms-transition:all .3s;transition:all .3s}
+			/* 顶部 */
+			header{position:relative;z-index:11;height:45px}
+			header .bg{position:absolute;z-index:2;left:0;top:0;width:100%;height:45px;background-color:#000;opacity:0.5;filter:alpha(opacity=50);_filter:alpha(opacity=100);_background-color:#1b1b1b}
+			header .inner{position:relative;z-index:3;width:680px;margin:0 auto}
+			header h1{position:absolute;top:9px;left:1px;opacity:0.6;filter:alpha(opacity=60);}
+			header h1 img{_visibility:hidden}
+			header .ext{position:absolute;right:0;line-height:normal;top:15px;opacity:0.4;filter:alpha(opacity=40)}
+			header .link{margin-left:20px}
+			/* 主要 */
+			.main{position:relative;z-index:10}
+			.main .inner{width:680px;margin:0 auto;position:relative;+zoom:1}
+			.tab{position:relative;+zoom:1}
+			.tab-panel{position:absolute;left:120px;top:0}
+			.main h3{position:absolute;z-index:1;width:298px;height:26px;background-position:0 -64px;top:-80px;left:0}
+			
+			/* 版权 */
+			.copyright{text-align:left;position:absolute;z-index:10;bottom:0;left:0;width:100%;height:45px}
+			.copyright .bg{position:absolute;left:0;top:0;width:100%;height:100%;background-color:#fff;opacity:0.4;filter:alpha(opacity=40)}
+			.copyright .inner{padding-top:16px;width:680px;margin:0 auto;position:relative;z-index:2}
+			.copyright,.copyright a{color:#000}
+			.copy-title{display:none}
+			.copy-item{margin-right:18px;vertical-align:top;opacity:0.4;filter:alpha(opacity=40)}
+			.copy-item-img{margin-right:0;position:absolute;right:0;top:15px;opacity:0.65;filter:alpha(opacity=65)}
+			.copy-item .sptln{margin-right:18px}
+			/* 主题背景 */
+			.theme{overflow:hidden;position:absolute;z-index:5;width:100%;height:100%;left:0;top:0}
+			.theme img{position:absolute}
+			.bd .showPlaceholder .placeholder{visibility:visible;cursor:text;}
+			.bd .placeholder{font-size:16px;text-indent:12px;position:absolute;background:none;width:250px;visibility:hidden;}
+			#divError{line-height:normal;px;position:absolute;top:132px;left:60px;color:#d90000}
+			.ft-ext{position:absolute;top:270px;right:60px;}
+		</style> 
+		<!--[if lte IE 8]>
+			<style type="text/css">
+				.ipt-t label{top:15px}
+				.tab-panel .shadow,
+				.tab-list .shadow{display:block;font-size:0;line-height:0;position:absolute;background-repeat:repeat-x;_background:#000;_filter:alpha(opacity=20)}
+				.tab-panel .shadow-left,
+				.tab-panel .shadow-right,
+				.tab-list .shadow-left{position:absolute;background-repeat:repeat-y;_background:#000;_filter:alpha(opacity=20)}
+				.tab-panel .shadow-bottom,
+				.tab-panel .shadow-top,
+				.tab-panel .shadow-bottom{width:460px;left:0;bottom:-5px;background-position:0 -16px}
+				.tab-panel .shadow-top{bottom:auto;width:460px;top:-3px;height:3px;background-position:0 -48px}
+				.tab-panel .shadow-left{z-index:10;width:3px;height:309px;left:-3px;bottom:-1px;background-position:-16px 0}
+				.tab-panel .shadow-right{width:4px;height:311px;left:auto;right:-4px;bottom:-2px;background-position:-32px 0}
+				.ipt-wraper .ipt-c{position:static;visibility:visible}
+				.ipt-wraper .ico-checkbox{display:none}
+				.copy-item-img{filter:none}
+			</style>
+		<![endif]-->
+		<!--[if IE 6]>
+			<style type="text/css">
+				.main h3{line-height:normal;font-size:26px;color:#fff;background:none;width:400px;font-family:simhei;font-weight:normal}
+				.tab-panel .shadow-bottom{width:461px;height:1px;bottom:-1px}
+				.tab-panel .shadow-top{height:1px;top:-1px}
+				.tab-panel .shadow-left{width:1px;left:-1px;filter:alpha(opacity=20)}
+				.tab-panel .shadow-right{height:310px;width:1px;right:-1px;height:309px;bottom:0}
+				.copyright,.copyright a{color:#7d7d7d}
+				.copy-item{filter:none}
+				.copy-item-img{filter:alpha(opacity=65)}
+			</style>
+		<![endif]-->
+		 <script type="text/javascript" src="/s9/res/js/jquery.min.js"></script>
+		 <script type="text/javascript" src="/s9/res/js/util/md5.js"></script>
+		<script id="jsBaseInner" type="text/javascript">
+			//GetElementById
+			function $id(sId){
+				return document.getElementById(sId);
+			}
+			//绑定事件监听
+			function fEventListen(oElement, sName, fObserver, bUseCapture){
+				bUseCapture = !!bUseCapture;
+				if (oElement.addEventListener){
+					oElement.addEventListener(sName, fObserver, bUseCapture);
+				}else if(oElement.attachEvent){
+					oElement.attachEvent('on' + sName, fObserver);
+				}
+			}
+			 
+			//Html5标签支持
+			function fHtml5Tag(){
+				var aTag = ["aside","figcaption","figure","footer","header","hgroup","nav","section"],i = 0;
+				for(i in aTag){document.createElement(aTag[i]);}
+			}
+
+			//HTML5初始化
+			fHtml5Tag();
+		</script>
+	</head>
+
+	<body>
+		<div class="page" id="page">
+			<header>
+				<div class="inner">
+					<!--logo <h1><a href="#" target="_blank"><img src="#" alt="S9平台" width="87" height="27"></a></h1> -->
+					<p class="ext">
+						<!-- <a class="link" href="http://www.xxx.com/" title="" id="lnkHelp" target="_blank">S9平台</a> -->
+					</p>
+				</div>
+				<div class="bg"></div>
+			</header>
+			<div class="main" id="main">
+				<div class="inner">
+					<h3 id="mainHd" style="font-family: 宋体;font-size:24px;color:#ffffff;font-weight:normal;left:200px">cms后台登录平台</h3>
+					<div class="tab">
+						<div class="tab-panel">
+							<div class="form">	<br><br>
+								<h2 style="font-size:20px;color:#000000" id="LoginTitle">登录cms后台平台2</h2>							
+								<form class="bd" name="frmLogin" method="post" action="" id="loginForm" onSubmit="return fSubmit()">
+									<!-- 帐号 -->
+									<div class="ipt ipt-t user" id="idInputLine">
+										<input type="text" name="usrname" style="width:318px" id="userNameIpt" value="superadmin"/>
+										<label for="userNameIpt" class="placeholder" id="idPlaceholder">用户名</label>
+									</div>
+									<!-- 密码 -->
+									<div class="ipt ipt-t pass" id="pwdInputLine">
+										<input type="password" name="password" id="pwdInput" value="superadmin"/>
+										<button type="submit"  value="登  录" style="width:100px;height:40px;font-size:18px">登  &nbsp;陆</button>
+										<label for="pwdInput" class="placeholder" id="pwdPlaceholder">密码</label>
+									</div>
+									<!-- 相关选项 -->
+									<div class="options">
+										<label class="ipt-wraper" style="margin-right:56px;"><input tabindex="5" type="checkbox" class="ipt ipt-c" id="rmbUser"><b class="ico ico-checkbox"></b>记住帐号</label>
+										<label class="ipt-wraper" style="margin-right:56px;"><input tabindex="5" type="checkbox" class="ipt ipt-c" ><b class="ico ico-checkbox"></b>忘记密码</label>
+									</div>
+									<div id="divError"></div>
+									<div class="ft" id="loginFootTips">还没有账号？<a href="javascript:void(0);" title="">立即注册</a></div>
+								</form>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+	 
+			<!-- 底 -->
+			<footer class="copyright">
+				<div class="inner">
+					<!-- <ul class="copy-list">
+						<li class="copy-item"><a href="#" target="_blank">about</a></li>
+					</ul> -->
+				</div>
+				<div class="bg"></div>
+			</footer>
+			<!-- 背景 -->
+			<div class="theme" id="theme"></div>	
+		</div>
+
+		<script type="text/javascript">
+			var gWindow = {};
+			// 获取窗口宽高
+			function fCalc(){
+				gWindow.width = typeof window.innerWidth == "undefined" ? document.documentElement.clientWidth : window.innerWidth;
+				gWindow.height = typeof window.innerHeight == "undefined" ? document.documentElement.clientHeight : window.innerHeight;
+				// 窗口最小高度不能小于435像素
+				gWindow.height = gWindow.height <= 435 ? 435 : gWindow.height;
+			}
+			fCalc();
+			// 背景图上下左右居中
+			function fChangeBg(){
+				var oBgImg = $id("themeImg");
+				var nImgHeight = oBgImg.height;
+				var nImgWidth = oBgImg.width;
+				if(typeof gWindow.height == "undefined"){
+					fCalc();
+				}
+				oBgImg.style.top = (gWindow.height - nImgHeight)/2 + "px";
+				oBgImg.style.left =  (gWindow.width - nImgWidth)/2 + "px";
+			}
+			// 初始化登录区域
+			var oMain = $id("main");
+			var oMainHd = $id("mainHd");
+			function fChangePos(){
+				if(typeof gWindow.height == "undefined"){
+					fCalc();
+				}
+				// 登录框上下居中
+				oMain.style.marginTop = (gWindow.height - 45 - 65 - 308)/2 + "px";
+				if(gWindow.height < 700){
+					oMainHd.style.top = "-60px";
+					if(gWindow.height < 520){
+						oMainHd.style.display = "none";
+					}else{
+						oMainHd.style.display = "block";
+					}
+				}else{
+					 oMainHd.style.top = "-80px";
+				}
+			}
+			fChangePos();
+			window.onresize = function(){
+				fCalc();
+				fChangeBg();
+				fChangePos();
+			}
+
+			// 背景样式图
+			//$id("theme").innerHTML = '<img src="http://s.cn.bing.net/az/hprichbg?p=rb%2fIceFishing_ZH-CN5242693414_1366x768.jpg" id="themeImg" onload="fChangeBg();"/>';
+			var ERRORS = {"unknown" : "系统繁忙!",
+						  "1" : "请输入您的用户名!",
+						  "2" : "请输入您的密码!",
+						  "03" : "此账号不存在!",
+						  "04" : "密码错误!",
+						  "05" : "登录错误次数超限，账号锁定!",
+						  "06" : "您的帐号处于冻结状态!",
+						  "7" : "登录超时，请重新登录!",
+						  "8" : "您的帐号处于禁用状态!",
+						  "9" : "您已成功退出系统!",
+						  "10" : "权限不足,无法访问! "
+						 };
+			//变量定义
+			var oUserIpt = $id("userNameIpt"),										//用户名
+			oTxtPwd = $id("pwdInput"),											//密码
+			oErr = $id("divError"),													//错误提示
+			oIdL = $id("idInputLine"),
+			oIdLabel = $id("idPlaceholder"),
+			oPwL = $id("pwdInputLine"),
+			oPwLabel = $id("pwdPlaceholder");
+ 
+			/**** 初始化 *****/
+			(function(){
+				var sErrorType = fGetQuery("errorType");
+				if(typeof sErrorType === "string" && sErrorType.length > 0){
+					var oErrObj = ERRORS[sErrorType];
+					if(typeof oErrObj === "undefined"){
+						oErr.innerHTML = ERRORS["unknown"];
+					}else{
+						oErr.innerHTML = oErrObj;
+					}
+				}
+				
+				var sEventName = '';
+				var bIsIe = false;
+				if(document.body.onpropertychange === null){
+					sEventName = 'propertychange';
+					var bIsIe = true;
+				}else{
+					sEventName = 'input';
+					fCheckAlways();
+				}
+				var el = document.createElement('div');
+				el.setAttribute('oninput', 'return;')
+				if(typeof el.oninput === 'function'){
+					sEventName = 'input';
+					if(bIsIe){
+						fCheckAlways();
+					}
+				}
+				//fEventListen(oUserIpt, sEventName, fIdInputEvent);	
+				//fEventListen(oTxtPwd, sEventName, fIdInputEvent);	
+				//提交按钮
+				
+				$("#userNameIpt").focus();
+			})();
+			// 提交
+			function fSubmit() {
+				if( oUserIpt.value ==""){
+					oErr.style.display = '';
+					oErr.innerHTML = "请输入你的帐号";
+					oUserIpt.focus();
+					return false;
+				}
+				if( oTxtPwd.value.length =="") {
+					oErr.style.display = '';
+					oErr.innerHTML = "请输入你的密码";
+					oTxtPwd.focus();
+					return false;
+				}
+				
+				$.ajax({
+					type:"post",
+					url:"/c/login/userLogin",
+					data:{
+						"userName":oUserIpt.value,
+						"pwd":hex_md5(oTxtPwd.value)
+					},
+					async : false,
+					success:function(data){
+						if(data.message == "success"){
+							if(data.loginMessage == "03"){
+								oErr.innerHTML = ERRORS["03"];
+								return false;
+							}else if(data.loginMessage == "04"){
+								oErr.innerHTML = ERRORS["04"];
+								return false;
+							}else if(data.loginMessage == "05"){
+								oErr.innerHTML = ERRORS["05"];
+								return false;
+							}else if(data.loginMessage == "06"){
+								oErr.innerHTML = ERRORS["06"];
+								return false;
+							}else if(data.loginMessage == "01"){
+								//alert("aaa");
+								$("#loginForm").attr("action","/c/login/userLogin");
+							}
+						}else{
+							oErr.innerHTML = "服务器忙!";
+							return false;
+						}
+					}
+				});
+			}
+			
+			//添加删除class 120802
+			function fCls(o, sCls, sFunc){
+				var oTar = o;
+				var nRes = oTar.className.indexOf(sCls);
+				if(sFunc == 'add'){
+					if(nRes == -1){
+						oTar.className = oTar.className + ' ' + sCls;
+					}else{
+						return;
+					}
+				}
+				if(sFunc == 'remove'){
+					if(nRes != -1){
+						var sCls = '\\s' + sCls
+						var rCls = new RegExp(sCls, 'g');
+						oTar.className = oTar.className.replace(rCls, '');
+					}else{
+						return;
+					}
+				}
+			}
+			
+			function fIdInputEvent(){
+				if(oUserIpt.value==''){
+					fCls(oIdL, 'showPlaceholder', 'add');
+				}else{
+					fCls(oIdL, 'showPlaceholder', 'remove');
+				}
+				if( oTxtPwd.value == '' ){
+					fCls(oPwL, 'showPlaceholder', 'add');
+				}else{
+					fCls(oPwL, 'showPlaceholder', 'remove');
+				}
+			}
+			
+			function fCheckAlways(){
+				window.oIntervalCheckAlways = setInterval(
+					function(){
+						fIdInputEvent();
+					},500
+				);
+			}
+			function fGetQuery(name){//获取url参数值
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"),
+					r = window.location.search.substr(1).match(reg);
+				if (r != null){
+					return unescape(r[2]);
+				}
+				return null;
+			}
+		</script>
+ 
+	</body>
+</html>

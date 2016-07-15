@@ -1,0 +1,78 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="teachingbuildingBo" type="com.zero2ipo.eeh.teachbuild.bo.TeachingBuildingBo"/>
+<resultMap class="teachingbuildingBo" id="teachingbuildingMap">
+	<result property="id" column="id"/>
+	<result property="name" column="name"/>
+	<result property="floors" column="floors"/>
+</resultMap>
+	<!--根据id查询查询-->
+	<select id='findteachingbuildingById' resultClass='teachingbuildingBo'>
+		SELECT
+		id,
+		name,
+		floors
+		FROM
+			eeh_teachingbuilding
+		WHERE  id=#id#
+	</select>
+
+<!--查询-->
+<select id='findEeh_teachingbuildingList' resultMap='teachingbuildingMap'>
+SELECT
+	id,
+	name,	
+	floors	
+FROM
+	eeh_teachingbuilding
+<dynamic prepend="WHERE">
+<isNotEmpty prepend="AND" property="name">
+INSTR(name,#name#)>0
+</isNotEmpty>
+</dynamic>
+</select>
+<!--查询个数-->
+	<select id='findteachingbuildingListCount' resultClass='java.lang.Integer'>
+		SELECT
+		count(0)
+		FROM
+		eeh_teachingbuilding
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="name">
+				INSTR(name,#name#)>0
+			</isNotEmpty>
+		</dynamic>
+	</select>
+<!--新增-->
+<insert id="add_teaching_building" parameterClass="teachingbuildingBo">
+	INSERT INTO
+		eeh_teachingbuilding(
+		name,
+		floors
+	)VALUES(
+		#name#,
+		#floors#
+	)
+</insert>
+<!--修改-->
+<update id="upd_teaching_building" parameterClass="teachingbuildingBo">
+	UPDATE
+		eeh_teachingbuilding
+	SET
+	name=#name#,	
+	floors=#floors#	
+ 	WHERE 
+	ID=#id#
+</update>
+<!--删除-->
+<delete id="del_teaching_building" parameterClass="java.util.Map">
+	DELETE FROM 
+	eeh_teachingbuilding
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</delete>
+</sqlMap>

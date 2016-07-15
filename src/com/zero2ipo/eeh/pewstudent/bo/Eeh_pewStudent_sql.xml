@@ -1,0 +1,171 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="PewStudentBo" type="com.zero2ipo.eeh.pewstudent.bo.PewStudentBo"/>
+<resultMap class="PewStudentBo" id="pewStudentMap">
+	<result property="id" column="id"/>
+	<result property="className" column="className"/>
+	<result property="name" column="name"/>
+	<result property="xhnum" column="xhnum"/>
+	<result property="sex" column="sex"/>
+	<result property="type" column="type"/>
+	<result property="electiveCourse" column="electiveCourse"/>
+	<result property="classRoom" column="classRoom"/>
+	<result property="seatNumer" column="seatNumer"/>
+	<result property="schoolTime" column="schoolTime"/>
+	<result property="status" column="status"/>
+	<result property="courseType" column="courseType"/>
+</resultMap>
+	<!--根据id查询查询-->
+	<select id='findPewStudentById' resultClass='PewStudentBo'>
+		SELECT
+			id,
+			className,
+			name,
+			xhnum,
+			sex,
+			type,
+			electiveCourse,
+			classRoom,
+			seatNumer,
+			schoolTime,
+			status,
+			courseType
+		FROM
+			eeh_pewstudent
+		WHERE
+			id=#id#
+	</select>
+
+<!--查询-->
+<select id='findPewStudentList' resultMap='pewStudentMap'>
+SELECT
+	id,
+	className,
+	name,
+	xhnum,
+	sex,
+	type,
+	electiveCourse,
+	classRoom,
+	seatNumer,
+	schoolTime,
+	status,
+	courseType
+FROM
+	eeh_pewstudent
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="name">
+		name=#name#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="classId">
+		className=#classId#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="electiveCourse">
+		electiveCourse=#electiveCourse#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="courseType">
+		courseType=#courseType#
+	</isNotEmpty>
+</dynamic>
+</select>
+<!--查询个数-->
+	<select id='findPewStudentListCount' resultClass='java.lang.Integer'>
+		SELECT
+			count(0)
+		FROM
+			eeh_pewstudent
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="name">
+				name=#name#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="classId">
+				className=#classId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="electiveCourse">
+				electiveCourse=#electiveCourse#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="courseType">
+				courseType=#courseType#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+<!--新增-->
+<insert id="add_PewStudent" parameterClass="PewStudentBo">
+	INSERT INTO
+		eeh_pewstudent(
+		className,
+		name,
+		xhnum,
+		sex,
+		type,
+		electiveCourse,
+		classRoom,
+		seatNumer,
+		schoolTime,
+		status,
+		courseType
+	)VALUES(
+		#className#,
+		#name#,
+		#xhnum#,
+		#sex#,
+		#type#,
+		#electiveCourse#,
+		#classRoom#,
+		#seatNumer#,
+		#schoolTime#,
+		#status#,
+		#courseType#
+	)
+</insert>
+<!--修改-->
+<update id="upd_PewStudent" parameterClass="PewStudentBo">
+	UPDATE
+		eeh_pewstudent
+	<dynamic prepend="SET">
+		<isNotEmpty prepend="," property="name">
+			name=#name#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="xhnum">
+			xhnum=#xhnum#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="sex">
+			sex=#sex#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="type">
+			type=#type#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="electiveCourse">
+			electiveCourse=#electiveCourse#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="classRoom">
+			classRoom=#classRoom#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="seatNumer">
+			seatNumer=#seatNumer#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="schoolTime">
+			schoolTime=#schoolTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="status">
+			status=#status#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="courseType">
+			courseType=#courseType#
+		</isNotEmpty>
+	</dynamic>
+ 	WHERE
+		ID=#id#
+</update>
+<!--删除-->
+<delete id="del_PewStudent" parameterClass="java.util.Map">
+	DELETE FROM
+		eeh_pewstudent
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+</delete>
+</sqlMap>

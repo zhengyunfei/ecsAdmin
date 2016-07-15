@@ -1,0 +1,106 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="picture" type="com.zero2ipo.module.entity.picture.PictureEntity"/>
+<resultMap class="picture" id="Cfj_picture">
+	<result property="id" column="id"/>
+	<result property="pid" column="pid"/>
+	<result property="name" column="name"/>
+	<result property="url" column="url"/>
+	<result property="attachmentUrl" column="attachmentUrl"/>
+	<result property="tum" column="tum"/>
+	<result property="remark" column="remark"/>
+</resultMap>
+<!--查询-->
+
+<select id='findPictureList' resultMap='Cfj_picture'>
+SELECT
+	id,
+	name,
+	url,
+	attachmentUrl,
+	tum,
+	pid,
+	remark
+FROM cfj_picture
+<dynamic prepend="WHERE">
+<isNotEmpty prepend="AND" property="name">
+INSTR(NAME,#name#)>0
+</isNotEmpty>
+</dynamic>
+</select>
+
+<select id='findPictureById' resultMap='Cfj_picture'>
+SELECT
+	id,
+	name,
+	url,
+	pid,
+	attachmentUrl,
+	tum,
+	remark
+FROM cfj_picture
+<dynamic prepend="WHERE">
+<isNotEmpty prepend="AND" property="id">
+	ID=#id#
+</isNotEmpty>
+<isNotEmpty prepend="AND" property="pid">
+	PID=#pid#
+</isNotEmpty>
+</dynamic>
+</select>
+<!--新增-->
+<insert id="addPicture" parameterClass="picture">
+	INSERT INTO cfj_picture(
+	id,
+	name,
+	url,
+	pid,
+	attachmentUrl,
+	tum,
+	remark
+)VALUES(
+	#id#,
+	#name#,
+	#url#,
+	#pid#,
+	#attachmentUrl#,
+	#tum#,
+	#remark#
+)
+</insert>
+<!--修改-->
+<update id="updPicture" parameterClass="picture">
+	UPDATE
+		cfj_picture
+	SET
+	id=#id#,
+	name=#name#,
+	url=#url#,
+	attachmentUrl=#attachmentUrl#,
+	tum=#tum#,
+	remark=#remark#
+ 	WHERE
+	ID=#id#
+</update>
+<!--删除-->
+<delete id="deletePicture" parameterClass="java.util.Map">
+	DELETE FROM
+		cfj_picture
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+</delete>
+<!-- 通过pid删除子表的所有数据 -->
+<delete id="deletePictureByPid" parameterClass="java.util.Map">
+	DELETE FROM
+		cfj_picture
+	WHERE
+	PID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+</delete>
+</sqlMap>

@@ -1,0 +1,77 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="attachBo" type="com.zero2ipo.cfj.article.bo.AttachBo"/>
+<resultMap class="attachBo" id="attachMap">
+	<result property="id" column="id"/>
+	<result property="articleid" column="articleId"/>
+	<result property="title" column="title"/>
+	<result property="filepath" column="filePath"/>
+	<result property="uploadauthor" column="uploadAuthor"/>
+	<result property="uploadtime" column="uploadTime"/>
+	<result property="viewname" column="viewName"/>
+</resultMap>
+<!--查询-->
+
+<select id='findAttachList' resultMap='attachMap'>
+SELECT
+	id,	
+	articleId,	
+	title,	
+	filePath,	
+	uploadAuthor,	
+	uploadTime,	
+	viewName	
+FROM eeh_attach
+<dynamic prepend="WHERE">
+<isNotEmpty prepend="AND" property="userId">
+INSTR(USER_ID,#userId#)>0
+</isNotEmpty>
+</dynamic>
+</select>
+<!--新增-->
+<insert id="addAttach" parameterClass="attachBo">
+	INSERT INTO eeh_attach(
+	id,	
+	articleId,	
+	title,	
+	filePath,	
+	uploadAuthor,	
+	uploadTime,	
+	viewName	
+)VALUES(
+	#id#,	
+	#articleid#,	
+	#title#,	
+	#filepath#,	
+	#uploadauthor#,	
+	#uploadtime#,	
+	#viewname#	
+)
+</insert>
+<!--修改-->
+<update id="updAttach" parameterClass="attachBo">
+	UPDATE
+		eeh_attach
+	SET
+	id=#id#,	
+	articleId=#articleid#,	
+	title=#title#,	
+	filePath=#filepath#,	
+	uploadAuthor=#uploadauthor#,	
+	uploadTime=#uploadtime#,	
+	viewName=#viewname#	
+ 	WHERE 
+	ID=#id#
+</update>
+<!--删除-->
+<delete id="delAttach" parameterClass="java.util.Map">
+	DELETE FROM
+		eeh_attach
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</delete>
+</sqlMap>

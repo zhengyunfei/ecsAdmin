@@ -1,0 +1,98 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="attachmentEntity" type="com.zero2ipo.plugins.image.AttachmentEntity"/>
+	<resultMap class="attachmentEntity"  id="attachmentInfoList">
+		<result property="attachmentId" column="ATTACHMENT_ID" />
+		<result property="code" column="CODE" />
+		<result property="type" column="TYPE" />
+		<result property="fileName" column="FILE_NAME" />
+		<result property="path" column="PATH" />
+		<result property="description" column="DESCRIPTION" />
+		<result property="uploadTime" column="UPLOAD_TIME" />
+		<result property="uploadUser" column="UPLOAD_USER" />
+	</resultMap>
+
+		<!-- 根据机构查询 -->
+	<select id="findAttachmentById" resultMap="attachmentInfoList">
+		SELECT
+		ATTACHMENT_ID,
+		CODE,
+		TYPE,
+		FILE_NAME,
+		PATH,
+		DESCRIPTION,
+		UPLOAD_TIME,
+		UPLOAD_USER
+
+		FROM
+		   cfj_attachment
+		WHERE
+		     ATTACHMENT_ID = #attachmentId#
+	</select>
+	<select id="findAttachmentByCode" resultMap="attachmentInfoList">
+		SELECT
+		ATTACHMENT_ID,
+		CODE,
+		TYPE,
+		FILE_NAME,
+		PATH,
+		DESCRIPTION,
+		UPLOAD_TIME,
+		UPLOAD_USER
+
+		FROM
+		   cfj_attachment
+		WHERE
+		     CODE = #code#
+	</select>
+	<select id="findAttachmentByPath" resultMap="attachmentInfoList">
+		SELECT
+		ATTACHMENT_ID,
+		CODE,
+		TYPE,
+		FILE_NAME,
+		PATH,
+		DESCRIPTION,
+		UPLOAD_TIME,
+		UPLOAD_USER
+
+		FROM
+		   cfj_attachment
+		WHERE
+		     PATH = #path#
+	</select>
+	<insert id="addAttachment" parameterClass="attachmentEntity">
+		INSERT INTO cfj_attachment
+		  (ATTACHMENT_ID,
+			CODE,
+			TYPE,
+			FILE_NAME,
+			PATH,
+			DESCRIPTION,
+			UPLOAD_TIME,
+			UPLOAD_USER
+			)
+		VALUES
+		  ( #attachmentId#,
+			#code#,
+			#type#,
+			#fileName#,
+			#path#,
+			#description#,
+			#uploadTime#,
+			#uploadUser#
+		  )
+	</insert>
+	<!-- 附件信息	删除 -->
+	<delete id="delAttachment" parameterClass="java.util.Map">
+		DELETE FROM
+				cfj_attachment
+			WHERE
+				ATTACHMENT_ID IN
+				<iterate property="attachmentId" conjunction="," close=")" open="(">
+					#attachmentId[]#
+				</iterate>
+	</delete>
+
+</sqlMap>

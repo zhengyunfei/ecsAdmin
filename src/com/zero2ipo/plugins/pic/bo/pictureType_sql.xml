@@ -1,0 +1,70 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="pictureType" type="com.zero2ipo.module.entity.picture.PictureTypeEntity"/>
+<resultMap class="pictureType" id="pictureTypeMap">
+	<result property="id" column="id"/>
+	<result property="name" column="name"/>
+	<result property="remark" column="remark"/>
+</resultMap>
+<!--查询-->
+
+<select id='findPictureTypeList' resultMap='pictureTypeMap' parameterClass="java.util.Map">
+SELECT
+	id,
+	name,
+	remark
+FROM cfj_picture_type
+<dynamic prepend="WHERE">
+<isNotEmpty prepend="AND" property="name">
+INSTR(NAME,#name#)>0
+</isNotEmpty>
+</dynamic>
+</select>
+
+<select id='findPictureTypeById' resultClass='pictureType' parameterClass="java.util.Map">
+SELECT
+	id,
+	name,
+	remark
+FROM cfj_picture_type
+<dynamic prepend="WHERE">
+<isNotEmpty prepend="AND" property="id">
+ID=#id#
+</isNotEmpty>
+</dynamic>
+</select>
+<!--新增-->
+<insert id="addPicType" parameterClass="pictureType">
+	INSERT INTO cfj_picture_type(
+	id,
+	name,
+	remark
+)VALUES(
+	#id#,
+	#name#,
+	#remark#
+)
+</insert>
+<!--修改-->
+<update id="updPictureType" parameterClass="pictureType">
+	UPDATE
+	cfj_picture_type
+	SET
+	id=#id#,
+	name=#name#,
+	remark=#remark#
+ 	WHERE
+	ID=#id#
+</update>
+<!--删除-->
+<delete id="deletePicType" parameterClass="java.util.Map">
+	DELETE FROM
+	cfj_picture_type
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+</delete>
+</sqlMap>

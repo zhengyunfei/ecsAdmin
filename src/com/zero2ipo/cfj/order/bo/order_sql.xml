@@ -1,0 +1,108 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="orderEntity" type="com.zero2ipo.module.entity.order.OrderEntity"/>
+	<resultMap class="orderEntity"  id="orderInfoList">
+		<result property="orderId" column="ORDER_ID" />
+		<result property="orderNum" column="ORDER_NUM" />
+		<result property="productId" column="PRODUCT_ID" />
+		<result property="productContent" column="PRODUCT_CONTENT" />
+		<result property="price" column="PRICE" />
+		<result property="invoice" column="INVOICE" />
+		<result property="invoiceType" column="INVOICE_TYPE" />
+		<result property="invoiceName" column="INVOICE_NAME" />
+		<result property="postage" column="POSTAGE" />
+		<result property="userName" column="USER_NAME" />
+		<result property="company" column="COMPANY" />
+		<result property="address" column="ADDRESS" />
+		<result property="post" column="POST" />
+		<result property="tel" column="TEL" />
+		<result property="phone" column="PHONE" />
+		<result property="email" column="EMAIL" />
+		<result property="inputTime" column="INPUT_TIME" />
+		<result property="audit" column="AUDIT" />
+	</resultMap>
+
+	<select id="findOrderInfoList" resultMap="orderInfoList" parameterClass="java.util.Map">
+		SELECT
+			ORDER_ID,
+			ORDER_NUM,
+			PRODUCT_ID,
+			PRODUCT_CONTENT,
+			PRICE,
+			INVOICE,
+			INVOICE_TYPE,
+			INVOICE_NAME,
+			POSTAGE,
+			USER_NAME,
+			COMPANY,
+			ADDRESS,
+			POST,
+			TEL,
+			PHONE,
+			EMAIL,
+			INPUT_TIME,
+			AUDIT
+		FROM CFJ_ORDER
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="productContent">
+			     INSTR(PRODUCT_CONTENT,#productContent#)>0 
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<!--查询-->
+	<select id="queryOrderListCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+	SELECT
+		count(0)
+	FROM CFJ_ORDER 
+	<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="productContent">
+			     INSTR(PRODUCT_CONTENT,#productContent#)>0 
+			</isNotEmpty>
+		</dynamic>
+	</select>
+		<!-- 根据ID查询 -->
+	<select id="findOrderById" resultMap="orderInfoList" parameterClass="java.util.Map">
+		SELECT ORDER_ID,
+			ORDER_NUM,
+			PRODUCT_ID,
+			PRODUCT_CONTENT,
+			PRICE,
+			INVOICE,
+			INVOICE_TYPE,
+			INVOICE_NAME,
+			POSTAGE,
+			USER_NAME,
+			COMPANY,
+			ADDRESS,
+			POST,
+			TEL,
+			PHONE,
+			EMAIL,
+			INPUT_TIME,
+			AUDIT
+		FROM CFJ_ORDER
+		WHERE ORDER_ID = #orderId#
+	</select>	
+	<!-- 机构信息	修改 -->
+	<update id="upOrder" parameterClass="orderEntity">
+	 	UPDATE 
+		    CFJ_ORDER 
+		  SET 
+			PRICE=#price#,
+			INVOICE=#invoice#,
+			INVOICE_TYPE=#invoiceType#,
+			INVOICE_NAME=#invoiceName#,
+			POSTAGE=#postage#,
+			USER_NAME=#userName#,
+			COMPANY=#company#,
+			ADDRESS=#address#,
+			POST=#post#,
+			TEL=#tel#,
+			PHONE=#phone#,
+			EMAIL=#email#,
+			AUDIT=#audit#
+		 WHERE 
+			ORDER_ID = #orderId#
+	</update>
+</sqlMap>

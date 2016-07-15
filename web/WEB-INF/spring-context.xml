@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xsi:schemaLocation="  
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd  
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd  
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">  
+  
+	<!-- 数据库配置文件  -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>/WEB-INF/config/config.properties</value>
+		</property>
+	</bean>
+	
+	<!--库1-->
+	<bean id="s9" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="${db1}"/>
+	</bean>
+ 
+    <!-- 配置多数据源映射关系 --> 
+    <bean id="dataSource" class="com.zero2ipo.framework.db.ibatis.DynamicDataSource">
+        <property name="targetDataSources">
+            <map>
+                <entry key="01" value-ref="s9"></entry>
+<!--                <entry key="02" value-ref="other"></entry>-->
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="s9"></property>
+    </bean>
+     
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="/WEB-INF/SqlMapConfig.xml"/>
+		<property name="mappingLocations" value="classpath*:/com/zero2ipo/**/*_sql.xml"/>
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />    
+	
+	<!--事物处理方式-->
+	<bean id="txProxyTemplate" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<!-- 事务拦截器bean需要依赖注入一个事务管理器 -->
+		<property name="transactionManager" ref="transactionManager"/>
+		<property name="transactionAttributes">
+			<!--事务传播属性-->
+			<props>
+				<prop key="add*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="upd*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="del*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly,-Exception</prop>
+			</props>
+		</property>
+	</bean> 
+
+	
+</beans>
+	

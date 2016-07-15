@@ -1,0 +1,155 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="studentBo" type="com.zero2ipo.eeh.student.bo.StudentBo"/>
+<resultMap class="studentBo" id="studentMap">
+	<result property="id" column="id"/>
+	<result property="classId" column="classId"/>
+	<result property="name" column="name"/>
+	<result property="xhnum" column="xhnum"/>
+	<result property="sex" column="sex"/>
+	<result property="password" column="password"/>
+	<result property="cardNo" column="cardNo"/>
+	<result property="stype" column="stype"/>
+</resultMap>
+	<!--根据id查询查询-->
+	<select id='findStudentById' resultClass='studentBo'>
+		SELECT
+		id,
+		classId,
+		name,
+		xhnum,
+		sex,
+		password,
+		cardNo,
+		stype
+		FROM
+			eeh_student
+		WHERE  id=#id#
+	</select>
+
+<!--查询-->
+<select id='findStudentList' resultMap='studentMap'>
+SELECT
+	id,
+	classId,
+	name,
+	xhnum,
+	sex,
+	password,
+	cardNo,
+	stype
+FROM
+	eeh_student
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="name">
+		name=#name#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="classId">
+		classId=#classId#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="xhnum">
+		xhnum=#xhnum#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="cardNo">
+		cardNo=#cardNo#
+	</isNotEmpty>
+</dynamic>
+</select>
+<!--查询个数-->
+	<select id='findStudentListCount' resultClass='java.lang.Integer'>
+		SELECT
+		count(0)
+		FROM
+		eeh_student
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="name">
+				name=#name#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="classId">
+				classId=#classId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="xhnum">
+				xhnum=#xhnum#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardNo">
+				cardNo=#cardNo#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+<!--新增-->
+<insert id="add_Student" parameterClass="studentBo">
+	INSERT INTO
+		eeh_student(
+		classId,
+		name,
+		xhnum,
+		sex,
+		password,
+		cardNo,
+		stype
+	)VALUES(
+		#classId#,
+		#name#,
+		#xhnum#,
+		#sex#,
+		#password#,
+		#cardNo#,
+		#stype#
+	)
+</insert>
+<!--修改-->
+<update id="upd_Student" parameterClass="studentBo">
+	UPDATE
+		eeh_student
+	<dynamic prepend="SET">
+		<isNotEmpty prepend="," property="name">
+			name=#name#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="classId">
+			classId=#classId#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="xhnum">
+			xhnum=#xhnum#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="sex">
+			sex=#sex#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="password">
+			password=#password#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="stype">
+			stype=#stype#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="cardNo">
+			cardNo=#cardNo#
+		</isNotEmpty>
+		<isEmpty prepend="," property="cardNo">
+			cardNo=#cardNo#
+		</isEmpty>
+	</dynamic>
+ 	WHERE
+	ID=#id#
+</update>
+<!--删除-->
+<delete id="del_Student" parameterClass="java.util.Map">
+	DELETE FROM
+		eeh_student
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+</delete>
+<!--根据年级删除学生信息-->
+<delete id="del_Student_By_GradeIds" parameterClass="java.util.Map">
+	DELETE FROM
+		eeh_student
+	WHERE
+	classId in (SELECT name from eeh_grade where id in
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+	)
+</delete>
+</sqlMap>

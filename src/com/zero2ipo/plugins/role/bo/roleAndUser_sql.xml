@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+ 	<typeAlias alias="sysRole" type="com.zero2ipo.plugins.role.bo.SysRole" />
+ 	<typeAlias alias="roleUser" type="com.zero2ipo.plugins.role.bo.User" />
+ 	<typeAlias alias="rela" type="com.zero2ipo.plugins.role.bo.UserRoleRela" />
+	<resultMap id="relaMap" class="rela">
+		<result property="relaId" column="USER_ROLE_REF_ID"/>
+		<result property="roleId" column="ROLE_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="addUser" column="ADD_USER"/>
+		<result property="addTime" column="ADD_TIME"/>
+	</resultMap>
+ 	<resultMap id="userList" class="roleUser">
+		<result property="userId" column="USER_ID"/>
+		<result property="userNo" column="USER_NO"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="userRealName" column="USER_REAL_NAME"/>
+		<result property="userPwd" column="USER_PWD"/>
+		<result property="curStatusCode" column="CUR_STATUS_CODE"/>
+		<result property="gender" column="GENDER"/>
+		<result property="position" column="POSITION"/>
+		<result property="tel" column="TEL"/>
+		<result property="mobile" column="MOBILE"/>
+		<result property="email" column="EMAIL"/>
+		<result property="ip" column="IP"/>
+		<result property="addDate" column="ADD_DATE"/>
+		<result property="addUser" column="ADD_USER"/>
+		<result property="expHintDate" column="EXP_HINT_DATE"/>
+		<result property="remark" column="REMARK"/>
+	</resultMap>
+
+ 	 <!-- 根据角色id查找该角色下的所有用户 -->
+ 	 <select id="findUserByRoleId" resultMap="userList" parameterClass="java.lang.String">
+ 	 	SELECT
+		 	  U.USER_ID,
+		      U.USER_NO,
+		      U.USER_NAME,
+		      U.USER_REAL_NAME,
+		      U.USER_PWD,
+		      U.CUR_STATUS_CODE,
+		      U.GENDER,
+		      U.POSITION,
+		      U.TEL,
+		      U.MOBILE,
+		      U.EMAIL,
+		      U.IP,
+		      U.ADD_DATE,
+		      U.ADD_USER,
+		      U.EXP_HINT_DATE,
+		      U.REMARK
+ 	 	FROM
+ 	 		  s9_sys_user_role_rela A,
+ 	 		  s9_sys_user U
+ 	 	WHERE
+ 	 	      A.USER_ID = U.USER_ID
+ 	 		  AND  A.ROLE_ID = #roleId#
+ 	 </select>
+
+ 	 <!-- 根据角色id查找该角色下的所有用户个数 -->
+ 	 <select id="findUserCountByRoleId" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+ 	 	SELECT
+		 	  COUNT(0)
+ 	 	FROM
+ 	 		  s9_sys_user_role_rela A,
+ 	 		  s9_sys_user U
+ 	 	WHERE
+ 	 	      A.USER_ID = U.USER_ID
+ 	 	AND   A.ROLE_ID = #roleId#
+ 	 </select>
+ 	 <!--根据roleId查询userrole-->
+	<select id="findUserRoleList" resultMap="relaMap" parameterClass="java.util.Map">
+		SELECT
+				USER_ROLE_REF_ID,
+				USER_ID,
+				ROLE_ID,
+				ADD_USER,
+				ADD_TIME
+		FROM
+			s9_sys_user_role_rela
+		WHERE USER_ID=#userId#
+	</select>
+	<!-- 角色添加用户中：根据用户名和真实姓名模糊查询用户 -->
+ 	 <select id="findUsers" resultMap="userList" parameterClass="java.util.Map">
+ 	 	SELECT
+		 	  U.USER_ID,
+		      U.USER_NO,
+		      U.USER_NAME,
+		      U.USER_REAL_NAME,
+		      U.USER_PWD,
+		      U.CUR_STATUS_CODE,
+		      U.GENDER,
+		      U.POSITION,
+		      U.TEL,
+		      U.MOBILE,
+		      U.EMAIL,
+		      U.IP,
+		      U.ADD_DATE,
+		      U.ADD_USER,
+		      U.EXP_HINT_DATE,
+		      U.REMARK
+ 	 	FROM
+ 	 		  s9_sys_user U
+ 	 	 WHERE
+ 	 	       NOT EXISTS (SELECT 1 FROM s9_sys_user_role_rela R WHERE R.USER_ID = U.USER_ID AND ROLE_ID = #roleId#)
+ 	 		<isNotEmpty property="userName"  prepend="AND">
+ 	 	        U.USER_NAME LIKE CONCAT('%',#userName#,'%')
+ 	 	    </isNotEmpty>
+ 	 	    <isNotEmpty property="userRealName"  prepend="AND">
+ 	 			U.USER_REAL_NAME LIKE CONCAT('%',#userRealName#,'%')
+ 	 		</isNotEmpty>
+ 	 </select>
+
+ 	 <!-- 根据用户名和真实姓名模糊查询用户个数 -->
+ 	 <select id="findUserCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+ 	 	SELECT
+		 	  COUNT(0)
+ 	 	FROM
+ 	 		  s9_sys_user U
+ 	 	<dynamic prepend="where">
+ 	 		<isNotEmpty property="userName"  prepend="AND">
+ 	 	        U.USER_NAME LIKE CONCAT('%',#userName#,'%')
+ 	 	    </isNotEmpty>
+ 	 	    <isNotEmpty property="userRealName"  prepend="AND">
+ 	 			U.USER_REAL_NAME LIKE CONCAT('%',#userRealName#,'%')
+ 	 		</isNotEmpty>
+ 	 	</dynamic>
+ 	 </select>
+
+ 	 <!-- 保存用户角色关系信息 -->
+	<insert id="addUserToRole" parameterClass="rela">
+		INSERT INTO
+			s9_sys_user_role_rela(
+				USER_ROLE_REF_ID,
+				USER_ID,
+				ROLE_ID,
+				ADD_USER,
+				ADD_TIME
+			)VALUES(
+				#relaId#,
+				#userId#,
+				#roleId#,
+				#addUser#,
+				now()
+			)
+	</insert>
+
+	<delete id="delUserFromRole" parameterClass="java.util.Map">
+	   DELETE FROM
+	     s9_sys_user_role_rela
+	   WHERE
+	     USER_ID IN
+	     <iterate property="userIds" conjunction="," close=")" open="(">
+				#userIds[]#
+	     </iterate>
+	   AND ROLE_ID = #roleId#
+   </delete>
+
+</sqlMap>

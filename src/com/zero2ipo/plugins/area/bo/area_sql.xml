@@ -1,0 +1,78 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="cfj_prov_city_area_street" type="com.zero2ipo.plugins.area.bo.AreaBo"/>
+<resultMap class="Cfj_prov_city_area_street" id="Cfj_prov_city_area_street">
+	<result property="id" column="id"/>
+	<result property="code" column="code"/>
+	<result property="parentId" column="parentId"/>
+	<result property="text" column="text"/>
+	<result property="level" column="level"/>
+</resultMap>
+<!--查询-->
+
+<select id='findAreaList' resultMap='Cfj_prov_city_area_street'>
+SELECT
+	ID,
+	CODE,	
+	PARENTID,	
+	text,
+	LEVEL	
+FROM 
+	area C
+WHERE 
+C.LEVEL IN ('1','2')
+</select>
+<select id="findAreaByCode" parameterClass="Cfj_prov_city_area_street" resultMap="Cfj_prov_city_area_street">
+SELECT
+	c.ID,	
+	c.CODE,	
+	c.PARENTID,	
+	CONCAT(CC.text,c.text) text,
+	c.LEVEL
+FROM 
+	area C,area CC
+WHERE 
+c.parentId=cc.code
+and c.code=#code#
+</select>
+<!--新增-->
+<insert id="addArea" parameterClass="Cfj_prov_city_area_street">
+	INSERT INTO area(
+	ID,	
+	CODE,	
+	PARENTID,	
+	text,
+	LEVEL	
+)VALUES(
+	#id#,	
+	#code#,	
+	#parentId#,	
+	#text#,
+	#level#	
+)
+</insert>
+<!--修改-->
+<update id="updArea" parameterClass="Cfj_prov_city_area_street">
+	UPDATE
+	area
+	SET
+	ID=#id#,	
+	CODE=#code#,	
+	PARENTID=#parentId#,	
+	text=#text#,
+	LEVEL=#level#	
+ 	WHERE 
+	ID=#id#
+</update>
+<!--删除-->
+<delete id="deleleteArea" parameterClass="java.util.Map">
+	DELETE FROM 
+	CFJ_PROV_CITY_AREA_STREET
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</delete>
+</sqlMap>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+ 	<typeAlias alias="sysRole" type="com.zero2ipo.plugins.role.bo.SysRole" />
+ 	<resultMap id="role" class="sysRole" >
+		<result column="ROLE_ID" property="roleId"/>
+		<result column="ROLE_NO" property="roleNo"/>
+		<result column="ROLE_NAME" property="roleName"/>
+		<result column="USER_NO" property="userNo"/>
+		<result column="CREATE_TIME" property="createTime"/>
+		<result column="ISACTIVE" property="isActive"/>
+		<result column="ROLE_DESC" property="roleDesc"/>
+	</resultMap>
+	<!-- 保存角色信息 -->
+	<insert id="addSysRole" parameterClass="sysRole">
+		INSERT INTO
+			s9_sys_role(
+				ROLE_ID,
+				ROLE_NO,
+				ROLE_NAME,
+				USER_NO,
+				CREATE_TIME,
+				ISACTIVE,
+				ROLE_DESC
+			)VALUES(
+				#roleId#,
+				#roleNo#,
+				#roleName#,
+				#userNo#,
+				#createTime#,
+				#isActive#,
+				#roleDesc#
+			)
+	</insert>
+	<!-- 删除角色信息 -->
+	<delete id="delSysRole" parameterClass="java.lang.String">
+			DELETE
+			FROM
+				s9_sys_role
+			WHERE
+				ROLE_ID = #roleId#
+	</delete>
+	<!-- 修改角色信息-->
+	<update id="updSysRole" parameterClass="sysRole">
+		UPDATE
+			s9_sys_role
+		SET
+			ROLE_NO = #roleNo#,
+			ROLE_NAME = #roleName#,
+			USER_NO = #userNo#,
+			CREATE_TIME = #createTime#,
+			ISACTIVE = #isActive#,
+			ROLE_DESC = #roleDesc#
+		WHERE
+			ROLE_ID = #roleId#
+	</update>
+ 	<!-- 查询所有角色数据 -->
+ 	 <select id="findSysRole" resultMap="role">
+ 	 	SELECT
+ 	 		ROLE_ID,
+ 	 		ROLE_NO,
+ 	 		ROLE_NAME,
+ 	 		USER_NO,
+ 	 		DATE_FORMAT(CREATE_TIME,'%Y-%c-%d %H:%i:%s')AS CREATE_TIME,
+ 	 		ISACTIVE,
+ 	 		ROLE_DESC
+ 	 	FROM
+ 	 		s9_sys_role
+ 	 				 <dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="roleId">
+			    ROLE_ID=#roleId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roleName">
+			    ROLE_NAME=#roleName#
+			</isNotEmpty>
+		</dynamic>
+ 	 </select>
+ 	 <!-- 查询所有角色数据 -->
+ 	 <select id="findRoleById" resultMap="role" parameterClass="java.lang.String">
+ 	 	SELECT
+ 	 		ROLE_ID,
+ 	 		ROLE_NO,
+ 	 		ROLE_NAME,
+ 	 		USER_NO,
+ 	 		DATE_FORMAT(CREATE_TIME,'%Y-%c-%d %H:%i:%s')AS CREATE_TIME,
+ 	 		ISACTIVE,
+ 	 		ROLE_DESC
+ 	 	FROM
+ 	 		s9_sys_role
+ 	 	WHERE
+ 	 	    ROLE_ID = #roleId#
+ 	 </select>
+</sqlMap>

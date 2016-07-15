@@ -1,0 +1,34 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="newsTationEntity" type="com.zero2ipo.module.entity.newstation.NewsTationEntity"/>
+<resultMap class="newsTationEntity" id="newsTationMap">	
+	<result property="id" column="id"/>
+	<result property="title" column="title"/>
+	<result property="content" column="content"/>
+	<result property="sendTime" column="sendTime"/>
+	<result property="userId" column="userId"/>
+	<result property="createUser" column="createUser"/>
+	<result property="status" column="status"/>
+</resultMap>
+<!--新增-->
+<insert id="addNewsTation" parameterClass="newsTationEntity">
+	INSERT INTO cfj_news_tation(
+	id,	
+	title,	
+	content,	
+	sendTime,	
+	userId,	
+	createUser,
+	status	
+)VALUES(
+	#id#,	
+	#title#,	
+	#content#,	
+	now(),	
+	#userId#,	
+	#createUser#,
+	#status#	
+)
+</insert>
+</sqlMap>

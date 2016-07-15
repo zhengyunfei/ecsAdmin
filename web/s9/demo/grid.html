@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="overflow:auto">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title>组织机构</title>
+<link href="/s9/res/css/default.css" rel="stylesheet" type="text/css">
+<link href="/s9/res/css/skin.css" rel="stylesheet" type="text/css">
+<link href="/s9/res/css/spirites.css" rel="stylesheet" type="text/css">
+<link href="/s9/res/css/common.css" rel="stylesheet" type="text/css">
+<link href="/s9/res/js/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+<link href="/s9/res/js/ligerUI/skins/Gray/css/all.css" rel="stylesheet" type="text/css" />
+<link href="/s9/res/js/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/s9/res/js/jquery.min.js"></script>
+<script src="/s9/res/js/ligerUI/js/ligerui.all.js" type="text/javascript"></script>
+<script type="text/javascript" src="/s9/demo/js/TreeDeptData.js"></script>
+</head>
+<body class="z-body-detail" style="height: 861px; ">
+	<table width="100%" id="js_layoutTable" border="0" cellspacing="0" cellpadding="0" height="*" class="js_layoutTable">
+		  <tbody><tr>
+			<td height="60"><div class="z-toolbar" id="ToolBar1"><div class="z-toolbar-ct"><div class="z-toolbar-overflow">
+			<div class="z-toolbar-nowrap">
+			<a href="javascript:void(0);"  onclick="getParent()" id="Button1" class="z-btn z-btn-flat" ><img class="icon010a15" src="../s9/res/img/icon000.png"><b>
+			获取父节点
+			  <i></i></b></a>
+		   	<a href="javascript:void(0);"  onclick="hasChildren()" id="Button2" class="z-btn z-btn-flat" ><img class="icon010a15" src="../s9/res/img/icon000.png"><b>
+		      是否有子节点
+		      <i></i></b></a>
+		      <a href="javascript:void(0);"  onclick="isLeaf()" id="Button3" class="z-btn z-btn-flat" ><img class="icon010a15" src="../s9/res/img/icon000.png"><b>
+		       是否叶节点节点
+		      <i></i></b></a>
+		      <a href="javascript:void(0);"  onclick="getSelected()" id="Button4" class="z-btn z-btn-flat"><img class="icon010a15" src="../s9/res/img/icon000.png"><b>
+		        获取选中的值(选择行)
+		      <i></i></b></a>
+		      <a href="javascript:void(0);"  onclick="getData()" id="Button5" class="z-btn z-btn-flat"><img class="icon010a15" src="../s9/res/img/icon000.png"><b>
+		      获取当前的值
+		      <i></i></b></a>
+		      
+		      </div></div></div></div>
+		                 
+		    </td>
+		  </tr>
+		  <tr valign="top">
+		  	<td height="*" style="padding-top: 7px; padding-right: 7px; padding-bottom: 7px; padding-left: 7px; height: 850px; ">
+		  	<div> 
+	 	  	<div class="l-clear"></div>
+			</div>
+    		<div id="maingrid"></div> 
+		  	</td>  
+		  </tr>
+		</tbody>
+	</table>
+	<script type="text/javascript">
+		 var manager;
+        $(function ()
+        {
+            manager = $("#maingrid").ligerGrid({
+                columns: [
+                    { display: '部门名', name: 'name',id:'name', width: 250, align: 'left' },
+                { display: '部门标示', name: 'id', id:'id1',width: 250, type: 'int', align: 'left' },
+
+                { display: '部门描述', name: 'remark', width: 250, align: 'left' }
+                ], width: '100%', pageSizeOptions: [5, 10, 15, 20], height: '97%',
+                data: TreeDeptData, rownumbers:true, checkbox: true,alternatingRow: false, tree: { columnId: 'name' }
+            }
+            );
+        });
+        function getParent()
+        {
+            var row = manager.getParent(manager.getSelectedRow());
+            alert(JSON.stringify(row));
+        }
+        function getSelected()
+        {
+            var row = manager.getSelectedRow();
+            if (!row) { alert('请选择行'); return; }
+            alert(JSON.stringify(row));
+        }
+        function getData()
+        {
+            var data = manager.getData();
+            alert(JSON.stringify(data));
+        }
+        function hasChildren()
+        {
+            var row = manager.getSelectedRowObj();
+            alert(manager.hasChildren(row));
+        }
+        function isLeaf()
+        {
+            var row = manager.getSelectedRowObj();
+            alert(manager.isLeaf(row));
+        }
+</script>
+
+</body>
+</html>

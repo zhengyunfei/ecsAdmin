@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="overflow: hidden"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>元素样式</title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <!-- CSS静态资源的引用 -->
+<link href="/s9/res/js/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+<link href="/s9/res/js/ligerUI/skins/Gray/css/all.css" rel="stylesheet" type="text/css" />
+<link href="/s9/res/js/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="/s9/res/js/jquery.min.js"></script>
+<script type="text/javascript" src="/s9/res/js/ligerUI/js/ligerui.all.js" ></script>
+
+<script type="text/javascript" src="/s9/res/js/jquery-validation/jquery.validate.min.js" ></script>
+<script type="text/javascript" src="/s9/res/js/jquery-validation/jquery.metadata.js" ></script>
+<script type="text/javascript" src="/s9/res/js/jquery-validation/messages_cn.js" ></script>
+
+	<link  rel="stylesheet" type="text/css" href="/s9/res/js/calendar/skin/WdatePicker.css">
+	<!-- JS静态资源的引用 -->
+	<script type="text/javascript"  src="/s9/res/js/calendar/WdatePicker.js"></script>
+	
+ <script type="text/javascript">
+        var eee;
+        $(function ()
+        {
+            $.metadata.setType("attr", "validate");
+            var v = $("form").validate({
+                debug: true,
+                errorPlacement: function (lable, element)
+                {
+                    if (element.hasClass("l-textarea"))
+                    {
+                        element.ligerTip({ content: lable.html(), target: element[0] }); 
+                    }
+                    else if (element.hasClass("l-text-field"))
+                    {
+                        element.parent().ligerTip({ content: lable.html(), target: element[0] });
+                    }
+                    else
+                    {
+                        lable.appendTo(element.parents("td:first").next("td"));
+                    }
+                },
+                success: function (lable)
+                {
+                    lable.ligerHideTip();
+                    lable.remove();
+                },
+                submitHandler: function ()
+                {
+                    $("form .l-text,.l-textarea").ligerHideTip();
+                    alert("Submitted!")
+                }
+            });
+           $("form").ligerForm();
+            $(".l-button-test").click(function ()
+            {
+                alert(v.element($("#txtName")));
+            });
+        });  
+    </script>
+</head>
+
+<body style="padding:10px">
+
+    <form name="form1" method="post" action="" id="form1">
+<div>
+</div>
+        <table cellpadding="0" cellspacing="0"  >
+            <tr>
+                <td align="right" >名字:</td>
+                <td align="left" ><input name="txtName" type="text" id="txtName" validate="{required:true,minlength:3,maxlength:10}" /></td>
+                <td align="left"></td>
+            </tr>
+           
+            <tr>
+                <td align="right"  valign="top">性别:</td>
+                <td align="left" >
+                    <input id="rbtnl_0" type="radio" name="rbtnl" value="1" checked="checked" /><label for="rbtnl_0">男</label> <input id="rbtnl_1" type="radio" name="rbtnl" value="2" /><label for="rbtnl_1">女</label>
+                </td><td align="left"></td>
+            </tr>   
+             <tr>
+                <td align="right" >Email:</td>
+                <td align="left" ><input name="txtEmail" type="text" id="txtEmail"  validate="{required:true,email:true}" /></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right"  valign="top">爱好:</td>
+                <td align="left" >
+                     <input id="CheckBoxList1_0" type="checkbox" name="CheckBoxList1$0" checked="checked" /><label for="CheckBoxList1_0">篮球</label><br /><input id="CheckBoxList1_1" type="checkbox" name="CheckBoxList1$1" /><label for="CheckBoxList1_1">网球</label> <br /><input id="CheckBox1" type="checkbox" name="CheckBoxList1$1" /><label for="CheckBoxList1_1">足球</label>      
+                </td><td align="left"></td>
+            </tr>  
+                 
+            <tr>
+                <td align="right" >入职日期:</td>
+                <td align="left" >
+                    <input name="txtDate" type="text" id="txtDate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',alwaysUseStartDate:true})" class="Wdate"  validate="{required:true}" />
+                </td><td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" >年龄:</td>
+                <td align="left" >
+                    <input name="txtAge" type="text" id="txtAge" ltype='spinner' ligerui="{type:'int'}" value="20" class="required" validate="{digits:true,min:1,max:100}" />
+                </td><td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" >部门:</td>
+                <td align="left" >
+                <select name="ddlDepart" id="ddlDepart" ltype="select">
+	<option value="1">主席</option>
+	<option value="2">研发中心</option>
+	<option value="3">销售部</option>
+	<option value="4">市场部</option>
+	<option value="5">顾问组</option>
+</select>
+                </td>
+            </tr>
+            <tr>
+                <td align="right" >地址:</td>
+                <td align="left" > 
+                <textarea cols="100" rows="4" id="address" style="width:400px" validate="{required:true}" ></textarea>
+                </td><td align="left"></td>
+            </tr>
+        </table>
+ <br />
+<input type="submit" value="提交" id="Button1" class="l-button l-button-submit" /> 
+<input type="button" value="测试" class="l-button l-button-test"/>
+    </form>
+    <div style="display:none">
+    <!--  数据统计代码 --></div>
+
+    
+</body>
+</html>

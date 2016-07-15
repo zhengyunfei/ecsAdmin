@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap>
+	<!--给sampleBo起个别名 作为引用-->
+	<typeAlias alias="sample" type="com.codestyle.bizmodel.bo.Sample"/>
+
+	<!--字段与实体的映射关系-->
+	<resultMap id="sampleMap" class="sample" >
+<!--	    <result column="表字段名" property="BO属性名"/>-->
+	    <result column="NAME" property="name"/>
+	</resultMap>
+	
+	<!--方式1：通过resultClass(字段as属性名)的方式-->
+	<select id="querySample1" resultClass="sample">
+	  SELECT 
+	 		NAME AS name
+	  FROM 
+	  		DUAL
+	</select>
+	
+	<!--方式2 ：通过resultMap(配置resultMap：字段关联属性名)的方式-->
+	<select id="querySample2" resultMap="sampleMap" parameterClass="java.lang.Integer">
+	  SELECT 
+	 		NAME
+	  FROM 
+	  		DUAL
+	  WHERE
+		<![CDATA[
+	  		AGE > #age#
+		]]>
+	</select>
+    
+	<!-- ....   -->
+	
+</sqlMap>

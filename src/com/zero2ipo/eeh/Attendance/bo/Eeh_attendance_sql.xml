@@ -1,0 +1,130 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="AttendanceBo" type="com.zero2ipo.eeh.Attendance.bo.AttendanceBo"/>
+	<resultMap class="AttendanceBo" id="AttendanceMap">
+		<result property="id" column="id"/>
+		<result property="cardNo" column="cardNo"/>
+		<result property="courseName" column="courseName"/>
+		<result property="classRoom" column="classRoom"/>
+		<result property="schoolTime" column="schoolTime"/>
+		<result property="type" column="type"/>
+		<result property="dayTime" column="dayTime"/>
+	</resultMap>
+	<!--根据id查询查询-->
+	<select id='findAttendanceById' resultClass='AttendanceBo'>
+		SELECT
+		id,
+		cardNo,
+		courseName,
+		classRoom,
+		schoolTime,
+		type,
+		dayTime
+		FROM
+		eeh_Attendance
+		WHERE  id=#id#
+	</select>
+
+	<!--查询-->
+	<select id='findAttendanceList' resultMap='AttendanceMap'>
+		SELECT
+		id,
+		cardNo,
+		courseName,
+		classRoom,
+		schoolTime,
+		type,
+		dayTime
+		FROM
+		eeh_Attendance
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="cardNo">
+				cardNo=#cardNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="name">
+				cardNo in (SELECT cardNo FROM eeh_student WHERE NAME=#name#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="courseName">
+				courseName=#courseName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="classRoom">
+				classRoom=#classRoom#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="type">
+				type=#type#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="schoolTime">
+				schoolTime=#schoolTime#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="dayTime">
+				dayTime=#dayTime#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<!--查询个数-->
+	<select id='findAttendanceListCount' resultClass='java.lang.Integer'>
+		SELECT
+		count(0)
+		FROM
+		eeh_Attendance
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="cardNo">
+				cardNo=#cardNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="name">
+				cardNo in (SELECT cardNo FROM eeh_student WHERE NAME=#name#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="courseName">
+				courseName=#courseName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="classRoom">
+				classRoom=#classRoom#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="type">
+				type=#type#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="schoolTime">
+				schoolTime=#schoolTime#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="dayTime">
+				dayTime=#dayTime#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<!--新增-->
+	<insert id="add_Attendance" parameterClass="AttendanceBo">
+		INSERT INTO
+		eeh_Attendance(
+		cardNo,
+		courseName,
+		classRoom,
+		schoolTime,
+		type
+		)VALUES(
+		#cardNo#，
+		#courseName#,
+		#classRoom#,
+		#schoolTime#
+		)
+	</insert>
+	<!--修改-->
+	<update id="upd_Attendance" parameterClass="AttendanceBo">
+		UPDATE
+		eeh_Attendance
+		SET
+		type=#type#
+		WHERE
+		ID=#id#
+	</update>
+	<!--删除-->
+	<delete id="del_Attendance" parameterClass="java.util.Map">
+		DELETE FROM
+		eeh_Attendance
+		WHERE
+		ID IN
+		<iterate property="id" conjunction="," close=")" open="(">
+			#id[]#
+		</iterate>
+	</delete>
+</sqlMap>

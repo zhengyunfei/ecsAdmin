@@ -1,0 +1,120 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="TimeBo" type="com.zero2ipo.eeh.time.bo.TimeBo"/>
+<resultMap class="TimeBo" id="TimeMap">
+	<result property="id" column="id"/>
+	<result property="name" column="name"/>
+	<result property="time" column="time"/>
+	<result property="startTime" column="startTime"/>
+	<result property="endTime" column="endTime"/>
+	<result property="type" column="type"/>
+</resultMap>
+	<!--根据id查询查询-->
+	<select id='findTimeById' resultClass='TimeBo'>
+		SELECT
+		id,
+		name,
+		time,
+		startTime,
+		endTime,
+		type
+		FROM
+			eeh_Time
+		WHERE  id=#id#
+	</select>
+
+<!--查询-->
+<select id='findTimeList' resultMap='TimeMap'>
+SELECT
+	id,
+	name,
+	time,
+	startTime,
+	endTime,
+	type
+FROM
+	eeh_Time
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="name">
+		INSTR(name,#name#)>0
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="type">
+		type=#type#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="startTime">
+		startTime=#startTime#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="endTime">
+		endTime=#endTime#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="time">
+		time=#time#
+	</isNotEmpty>
+</dynamic>
+</select>
+<!--查询个数-->
+	<select id='findTimeListCount' resultClass='java.lang.Integer'>
+		SELECT
+		count(0)
+		FROM
+		eeh_Time
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="name">
+				INSTR(name,#name#)>0
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="type">
+				type=#type#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startTime">
+				startTime=#startTime#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endTime">
+				endTime=#endTime#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="time">
+				time=#time#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+<!--新增-->
+<insert id="add_Time" parameterClass="TimeBo">
+	INSERT INTO
+		eeh_Time(
+		name,
+		time,
+		startTime,
+		endTime,
+		type
+	)VALUES(
+		#name#,
+		#time#,
+		#startTime#,
+		#endTime#,
+		#type#
+	)
+</insert>
+<!--修改-->
+<update id="upd_Time" parameterClass="TimeBo">
+	UPDATE
+		eeh_Time
+	SET
+	name=#name#,
+	time=#time#,
+	startTime=#startTime#,
+	endTime=#endTime#,
+	type=#type#
+ 	WHERE
+	ID=#id#
+</update>
+<!--删除-->
+<delete id="del_Time" parameterClass="java.util.Map">
+	DELETE FROM
+	eeh_Time
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+</delete>
+</sqlMap>

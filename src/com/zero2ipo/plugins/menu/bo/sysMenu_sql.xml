@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+ 	<typeAlias alias="sysMenu" type="com.zero2ipo.plugins.menu.bo.SysMenu" />
+	<resultMap id="sysmenu" class="sysMenu" >
+		<result column="MENU_ID" property="menuId"/>
+		<result column="MENU_CODE" property="menuCode"/>
+		<result column="MENU_NAME" property="menuName"/>
+		<result column="MENU_TITLE" property="menuTitle"/>
+
+		<result column="P_MENU_CODE" property="pmenuCode"/>
+		<result column="MENU_FOLDER_FLAG" property="menuFolderFlag"/>
+		<result column="HANDLE_SORT" property="handleSort"/>
+		<result column="HANDLE_REPRESENT" property="handleRepresent"/>
+
+		<result column="MENU_IMG" property="menuImg"/>
+		<result column="SORT_NO" property="sortNo"/>
+		<result column="MENU_LEVEL" property="menuLevel"/>
+		<result column="PATH_CODE" property="pathCode"/>
+		<result column="ISACTIVE" property="isActive"/>
+
+		<result column="ADD_USER" property="addUser"/>
+		<result column="ADD_TIME" property="addTime"/>
+		<result column="REMARK" property="remark"/>
+
+
+	</resultMap>
+
+	<!-- 根据菜单级别查询该级别下的所有菜单 -->
+ 	 <select id="getSysMenu" resultMap="sysmenu">
+ 	 	SELECT
+ 	 		MENU_ID,
+ 	 		MENU_CODE,
+ 	 		MENU_NAME,
+ 	 		MENU_TITLE,
+ 	 		P_MENU_CODE,
+ 	 		MENU_FOLDER_FLAG,
+ 	 		HANDLE_SORT,
+ 	 		HANDLE_REPRESENT,
+ 	 		MENU_IMG,
+ 	 		SORT_NO,
+ 	 		MENU_LEVEL,
+ 	 		PATH_CODE,
+ 	 		ISACTIVE,
+ 	 		ADD_USER,
+ 	 		DATE_FORMAT(ADD_TIME,'%Y-%c-%d %H-%i-%s') ADD_TIME,
+ 	 		REMARK
+ 	 	FROM
+ 	 		s9_sys_menu
+ 	 	WHERE
+ 	 		P_MENU_CODE = #menuCode#
+ 	 	AND
+ 	 		ISACTIVE != '0'
+ 	 	ORDER BY SORT_NO
+ 	 </select>
+
+	<!-- 查询所有菜单 -->
+	<select id="listSysMenu" resultMap="sysmenu">
+		SELECT
+			MENU_ID,
+ 	 		MENU_CODE,
+ 	 		MENU_NAME,
+ 	 		MENU_TITLE,
+ 	 		P_MENU_CODE,
+ 	 		MENU_FOLDER_FLAG,
+ 	 		HANDLE_SORT,
+ 	 		HANDLE_REPRESENT,
+ 	 		MENU_IMG,
+ 	 		SORT_NO,
+ 	 		MENU_LEVEL,
+ 	 		PATH_CODE,
+ 	 		ISACTIVE,
+ 	 		ADD_USER,
+ 	 		DATE_FORMAT(ADD_TIME,'%Y-%c-%d %H-%i-%s') ADD_TIME,
+ 	 		REMARK
+ 	 	FROM
+ 	 		s9_sys_menu
+ 	 	ORDER BY SORT_NO
+	</select>
+
+	<!-- 查询所有(启用)菜单 -->
+	<select id="findSysMenu" resultMap="sysmenu">
+		SELECT
+			MENU_ID,
+ 	 		MENU_CODE,
+ 	 		MENU_NAME,
+ 	 		MENU_TITLE,
+ 	 		P_MENU_CODE,
+ 	 		MENU_FOLDER_FLAG,
+ 	 		HANDLE_SORT,
+ 	 		HANDLE_REPRESENT,
+ 	 		MENU_IMG,
+ 	 		SORT_NO,
+ 	 		MENU_LEVEL,
+ 	 		PATH_CODE,
+ 	 		ISACTIVE,
+ 	 		ADD_USER,
+ 	 		DATE_FORMAT(ADD_TIME,'%Y-%c-%d %H-%i-%s') ADD_TIME,
+ 	 		REMARK
+ 	 	FROM
+ 	 		s9_sys_menu
+ 	 	WHERE
+ 	 		ISACTIVE = '1'
+ 	 	ORDER BY SORT_NO
+	</select>
+
+	<!-- 修改系统菜单 -->
+	<update id="updSysMenu">
+		UPDATE
+			 s9_sys_menu
+		SET
+			MENU_NAME = #menuName#,
+			ISACTIVE = #isActive#,
+			PATH_CODE = #pathCode#,
+			P_MENU_CODE=#pmenuCode#,
+			MENU_IMG = #menuImg#
+		WHERE
+			MENU_ID = #menuId#
+	</update>
+
+	<!-- 更改菜单状态 -->
+	<update id="updMenuStatus">
+		UPDATE
+			 s9_sys_menu
+		SET
+			ISACTIVE = #isActive#
+		WHERE
+			MENU_ID = #menuId#
+	</update>
+
+	<!-- 查看系统菜单 -->
+	<select id="showSysMenu" resultClass="sysMenu">
+		SELECT
+ 	 		MENU_ID AS menuId,
+ 	 		MENU_CODE AS menuCode,
+ 	 		MENU_NAME AS menuName,
+ 	 		MENU_TITLE AS menuTitle,
+ 	 		P_MENU_CODE AS pmenuCode,
+ 	 		MENU_FOLDER_FLAG AS menuFolderFlag,
+ 	 		HANDLE_SORT AS handleSort,
+ 	 		HANDLE_REPRESENT AS handleRepresent,
+ 	 		MENU_IMG AS menuImg,
+ 	 		SORT_NO AS sortNo,
+ 	 		MENU_LEVEL AS menuLevel,
+ 	 		PATH_CODE AS pathCode,
+ 	 		ISACTIVE AS isActive,
+ 	 		ADD_USER AS addUser,
+ 	 		DATE_FORMAT(ADD_TIME,'%Y-%c-%d %H-%i-%s') AS addTime,
+ 	 		REMARK AS remark
+ 	 	FROM
+ 	 		s9_sys_menu
+ 	 	WHERE
+ 	 		MENU_ID = #menuId#
+	</select>
+
+	<!-- 更改系统菜单 -->
+	<update id="updateSysMenu">
+		UPDATE
+			 s9_sys_menu
+		SET
+			MENU_CODE = #menuCode#,
+			MENU_NAME = #menuName#,
+			PATH_CODE = #pathCode#,
+			P_MENU_CODE=#pmenuCode#,
+			SORT_NO = #sortNo#,
+			MENU_IMG = #menuImg#,
+			REMARK = #remark#
+		WHERE
+			MENU_ID = #menuId#
+	</update>
+
+	<!-- 新增系统菜单 -->
+	<insert id="addSysMenu">
+		INSERT INTO s9_sys_menu
+		(
+			MENU_ID,
+			MENU_CODE,
+			MENU_NAME,
+			MENU_TITLE,
+			P_MENU_CODE,
+			MENU_FOLDER_FLAG,
+			SORT_NO,
+			MENU_IMG,
+			MENU_LEVEL,
+			PATH_CODE,
+			ISACTIVE,
+			ADD_USER,
+			ADD_TIME,
+			REMARK
+		)
+		VALUES
+		(
+			#menuId#,
+			TRIM(#menuCode#),
+			#menuName#,
+			#menuTitle#,
+			#pmenuCode#,
+			#menuFolderFlag#,
+			#sortNo#,
+			#menuImg#,
+			#menuLevel#,
+			#pathCode#,
+			#isActive#,
+			#addUser#,
+			#addTime#,
+			#remark#
+		)
+	</insert>
+
+	<!-- 新增系统角色菜单权限 -->
+	<insert id="addRoleMenu">
+		INSERT INTO s9_sys_role_menu_rela
+		(
+			ID,
+			ROLE_ID,
+			MENU_ID
+		)
+		VALUES
+		(
+			#id#,
+			#roleId#,
+			#menuId#
+		)
+	</insert>
+
+	<!-- 根据角色查询对应的菜单权限 -->
+	<select id="findRoleMenu" resultClass="java.lang.String">
+		SELECT
+			MENU_ID
+		FROM s9_sys_role_menu_rela
+
+		WHERE
+			ROLE_ID = #roleId#
+	</select>
+
+	<!-- 返回多角色对应的菜单 -->
+	<select id="findManyRoleMenu" resultClass="java.lang.String">
+		SELECT
+		 	DISTINCT MENU_ID
+		FROM s9_sys_role_menu_rela
+		WHERE
+			 ROLE_ID IN
+	     <iterate property="roleList" conjunction="," close=")" open="(">
+				#roleList[]#
+	     </iterate>
+	</select>
+	<!-- 根据用户userId查询用户相应的角色菜单 -->
+	<resultMap id="findMenuListByUserIdMap" class="sysMenu" >
+		<result column="PATH_CODE" property="pathCode"/>
+	</resultMap>
+	<select id="findMenuListByUserId" parameterClass="java.lang.String" resultMap="findMenuListByUserIdMap">
+		SELECT
+			SM.PATH_CODE
+		FROM
+			s9_sys_menu SM
+		WHERE
+			sm.menu_id IN (
+				SELECT
+					srmr.menu_id
+				FROM
+					s9_sys_role_menu_rela SRMR
+				WHERE
+					srmr.role_id = any(
+						SELECT
+							surr.role_id
+						FROM
+							s9_sys_user_role_rela SURR
+						WHERE
+							surr.USER_ID = #userId#
+					)
+			)
+		and sm.PATH_CODE !=''
+		and sm.ISACTIVE=1
+	</select>
+	<!-- 删除角色菜单 -->
+	<delete id="deleteRoleMenu">
+		DELETE FROM
+			s9_sys_role_menu_rela
+		WHERE ROLE_ID = #role_Id#
+	</delete>
+</sqlMap>

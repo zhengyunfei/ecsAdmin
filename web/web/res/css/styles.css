@@ -1,0 +1,18 @@
+a[href^="#"]:focus, a[href^="javascript"]:focus{outline:0; -moz-outline-style: none;}
+html{ height:100%;}
+body {background: #ffffff;color: #444; height:100%;}
+a { color: #09d; text-decoration: none; border: 0; background-color: transparent; }
+a:hover { color: #f90; text-decoration: underline; background-color: transparent; }
+a:active{ color: #f70; outline:0;}
+body,div,blockquote,q,iframe,form,
+ul,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,p{ margin: 0; padding: 0;}
+ul,dl,li{list-style: none;}
+img,fieldset{border: none 0;}
+body,td,textarea{word-break: break-all;word-wrap: break-word; line-height:1.5;}
+body,input,textarea,select,button{margin: 0; font-size: 12px;font-family: Tahoma, SimSun, sans-serif;}
+div,p,table,th,td{ font-size:1em; font-family:inherit; line-height:inherit;}
+em,i{color:#669900}
+hr{ clear:both; margin:7px 0; +margin: 0;  border:0 none;font-size: 1px; line-height:1px;color: #ddd; background-color:#ddd; height: 1px;}
+
+.frame{ display:block; width:140px; height:100px; padding:10px; background:url(/web/res/img/frame.gif) no-repeat center center; margin-bottom:10px;}
+.frame:hover{ background:url(/web/res/img/frame_over.gif) no-repeat center center;}

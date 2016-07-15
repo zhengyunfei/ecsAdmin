@@ -1,0 +1,102 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="TeacherBo" type="com.zero2ipo.eeh.teacher.bo.TeacherBo"/>
+<resultMap class="TeacherBo" id="TeacherMap">
+	<result property="id" column="id"/>
+	<result property="name" column="name"/>
+	<result property="subjectId" column="subjectId"/>
+	<result property="gradeId" column="gradeId"/>
+	<result property="classId" column="classId"/>
+</resultMap>
+	<!--根据id查询查询-->
+	<select id='findTeacherById' resultClass='TeacherBo'>
+		SELECT
+		id,
+		name,
+		subjectId,
+		gradeId,
+		classId
+		FROM
+			eeh_teacher
+		WHERE  id=#id#
+	</select>
+
+<!--查询-->
+<select id='findTeacherList' resultMap='TeacherMap'>
+SELECT
+	id,
+	name,
+	subjectId,
+	gradeId,
+	classId
+FROM
+	eeh_teacher
+	<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="name">
+	INSTR(name,#name#)>0
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="classId">
+		classId=#classId#
+    </isNotEmpty>
+	<isNotEmpty prepend="AND" property="subjectId">
+		subjectId=#subjectId#
+	</isNotEmpty>
+</dynamic>
+</select>
+<!--查询个数-->
+	<select id='findTeacherListCount' resultClass='java.lang.Integer'>
+		SELECT
+		count(0)
+		FROM
+		eeh_teacher
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="name">
+				INSTR(name,#name#)>0
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="classId">
+				classId=#classId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="subjectId">
+				subjectId=#subjectId#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+<!--新增-->
+<insert id="add_Teacher" parameterClass="TeacherBo">
+	INSERT INTO
+		eeh_teacher(
+		name,
+		subjectId,
+		gradeId,
+		classId
+	)VALUES(
+		#name#,
+		#subjectId#,
+		#gradeId#,
+		#classId#
+	)
+</insert>
+<!--修改-->
+<update id="upd_Teacher" parameterClass="TeacherBo">
+	UPDATE
+		eeh_teacher
+	SET
+	name=#name#,
+	subjectId=#subjectId#,
+	classId=#classId#,
+	gradeId=#gradeId#
+ 	WHERE
+	ID=#id#
+</update>
+<!--删除-->
+<delete id="del_Teacher" parameterClass="java.util.Map">
+	DELETE FROM
+	eeh_teacher
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+</delete>
+</sqlMap>

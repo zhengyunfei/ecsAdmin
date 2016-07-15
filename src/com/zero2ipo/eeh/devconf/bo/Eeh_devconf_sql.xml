@@ -1,0 +1,120 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="DevConfBo" type="com.zero2ipo.eeh.devconf.bo.DevConfBo"/>
+	<resultMap class="DevConfBo" id="DevConfMap">
+		<result property="dev_no" column="dev_no"/>
+		<result property="dev_name" column="dev_name"/>
+		<result property="ip" column="ip"/>
+		<result property="mac" column="mac"/>
+		<result property="dev_status" column="dev_status"/>
+		<result property="id" column="id"/>
+	</resultMap>
+	<!--根据id查询查询-->
+	<select id='findDevConfById' resultClass='DevConfBo'>
+		SELECT
+			id,
+			dev_no,
+			dev_name,
+			ip,
+			mac,
+			dev_status
+		FROM
+		eeh_device_conf
+		WHERE  id=#id#
+	</select>
+
+	<!--查询-->
+	<select id='findDevConfList' resultMap='DevConfMap'>
+		SELECT
+			id,
+			dev_no,
+			dev_name,
+			ip,
+			mac,
+			dev_status
+		FROM
+		eeh_device_conf
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="dev_no">
+				dev_no=#dev_no#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="dev_name">
+				dev_name =#dev_name#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="ip">
+				ip=#ip#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="mac">
+				mac=#mac#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="dev_status">
+				dev_status=#dev_status#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<!--查询个数-->
+	<select id='findDevConfListCount' resultClass='java.lang.Integer'>
+		SELECT
+		count(0)
+		FROM
+		eeh_device_conf
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="dev_no">
+				dev_no=#dev_no#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="dev_name">
+				dev_name =#dev_name#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="ip">
+				ip=#ip#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="mac">
+				mac=#mac#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="dev_status">
+				dev_status=#dev_status#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<!--新增-->
+	<insert id="add_DevConf" parameterClass="DevConfBo">
+		INSERT INTO
+		eeh_device_conf(
+			dev_no,
+			dev_name,
+			ip,
+			mac,
+			dev_status
+		)VALUES(
+			#dev_no#,
+			#dev_name#,
+			#ip#,
+			#mac#,
+			#dev_status#
+		)
+	</insert>
+	<!--修改-->
+	<update id="upd_DevConf" parameterClass="DevConfBo">
+		UPDATE
+			eeh_device_conf
+		SET
+			dev_no=#dev_no#,
+			dev_name=#dev_name#,
+			ip=#ip#,
+			mac=#mac#,
+			dev_status=#dev_status#
+		where
+		id=#id#
+	</update>
+	<!--删除-->
+	<delete id="del_DevConf" parameterClass="java.util.Map">
+		DELETE FROM
+			eeh_device_conf
+		WHERE
+		ID IN
+		<iterate property="id" conjunction="," close=")" open="(">
+			#id[]#
+		</iterate>
+	</delete>
+</sqlMap>

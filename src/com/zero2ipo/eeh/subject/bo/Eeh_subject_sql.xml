@@ -1,0 +1,85 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="SubjectBo" type="com.zero2ipo.eeh.subject.bo.SubjectBo"/>
+<resultMap class="SubjectBo" id="SubjectMap">
+	<result property="id" column="id"/>
+	<result property="name" column="name"/>
+	<result property="subjectClass" column="subjectClass"/>
+</resultMap>
+	<!--根据id查询查询-->
+	<select id='findSubjectById' resultClass='SubjectBo'>
+		SELECT
+		id,
+		name,
+		subjectClass
+		FROM
+			eeh_Subject
+		WHERE  id=#id#
+	</select>
+
+<!--查询-->
+<select id='findSubjectList' resultMap='SubjectMap'>
+SELECT
+	id,
+	name,
+	subjectClass
+FROM
+	eeh_Subject
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="name">
+	INSTR(name,#name#)>0
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="subjectClass">
+		subjectClass=#subjectClass#
+	</isNotEmpty>
+</dynamic>
+</select>
+<!--查询个数-->
+	<select id='findSubjectListCount' resultClass='java.lang.Integer'>
+		SELECT
+		count(0)
+		FROM
+		eeh_Subject
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="name">
+				INSTR(name,#name#)>0
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="subjectClass">
+				subjectClass=#subjectClass#
+			</isNotEmpty>
+
+		</dynamic>
+	</select>
+<!--新增-->
+<insert id="add_Subject" parameterClass="SubjectBo">
+	INSERT INTO
+		eeh_Subject(
+		name,
+		subjectClass
+	)VALUES(
+		#name#,
+		#subjectClass#
+	)
+</insert>
+<!--修改-->
+<update id="upd_Subject" parameterClass="SubjectBo">
+	UPDATE
+		eeh_Subject
+	SET
+	name=#name#,
+	subjectClass=#subjectClass#
+ 	WHERE
+	ID=#id#
+</update>
+<!--删除-->
+<delete id="del_Subject" parameterClass="java.util.Map">
+	DELETE FROM 
+	eeh_Subject
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</delete>
+</sqlMap>

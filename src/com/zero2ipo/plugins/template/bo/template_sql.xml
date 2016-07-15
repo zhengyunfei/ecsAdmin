@@ -1,0 +1,132 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="templateEntity" type="com.zero2ipo.module.entity.template.TemplateEntity"/>
+<resultMap class="templateEntity" id="templateMap">	
+    <result property="templateId" column="TEMPLATE_ID"/>
+	<result property="templateCode" column="TEMPLATE_CODE"/>
+	<result property="templateName" column="TEMPLATE_NAME"/>
+	<result property="templateAddress" column="TEMPLATE_ADDRESS"/>
+	<result property="templateOrder" column="TEMPLATE_ORDER"/>
+	<result property="templatePreview" column="TEMPLATE_PREVIEW"/>
+	<result property="templateType" column="TEMPLATE_TYPE"/>
+	<result property="templateFilter" column="TEMPLATE_FILTER"/>
+	<result property="isValid" column="IS_VALID"/>
+	<result property="createUserCode" column="CREATE_USER_CODE"/>
+	<result property="createTime" column="CREATE_TIME"/>
+	<result property="updateUserCode" column="UPDATE_USER_CODE"/>
+	<result property="updateTime" column="UPDATE_TIME"/>
+</resultMap>
+<!--查询-->
+<select id="findAllTemplateList" resultMap="templateMap">
+SELECT
+	TEMPLATE_ID,	
+	TEMPLATE_CODE,	
+	TEMPLATE_NAME,	
+	TEMPLATE_ADDRESS,	
+	TEMPLATE_ORDER,	
+	TEMPLATE_PREVIEW,
+	TEMPLATE_TYPE,	
+	TEMPLATE_FILTER,
+	IS_VALID,	
+	CREATE_USER_CODE,	
+	CREATE_TIME,	
+	UPDATE_USER_CODE,	
+	UPDATE_TIME
+FROM cfj_template
+<dynamic prepend="WHERE">
+<isNotEmpty prepend="AND" property="templateId">
+TEMPLATE_ID=#templateId#
+</isNotEmpty>
+</dynamic>
+</select>
+
+<select id="findByIdTemplate" resultMap="templateMap" parameterClass="java.util.Map">
+SELECT
+	TEMPLATE_ID,	
+	TEMPLATE_CODE,	
+	TEMPLATE_NAME,	
+	TEMPLATE_ADDRESS,	
+	TEMPLATE_ORDER,	
+	TEMPLATE_PREVIEW,	
+	IS_VALID,	
+	CREATE_USER_CODE,	
+	CREATE_TIME,	
+	UPDATE_USER_CODE,
+	TEMPLATE_TYPE,	
+	TEMPLATE_FILTER,	
+	UPDATE_TIME	
+FROM cfj_template
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="templateId">
+		TEMPLATE_ID=#templateId#
+	</isNotEmpty>
+    <isNotEmpty prepend="AND" property="templateCode">
+		TEMPLATE_CODE=#templateCode#
+	</isNotEmpty>
+</dynamic>
+</select>
+<!--新增-->
+<insert id="addTemplate" parameterClass="templateEntity">
+	INSERT INTO cfj_template(
+	TEMPLATE_ID,	
+	TEMPLATE_CODE,	
+	TEMPLATE_NAME,	
+	TEMPLATE_ADDRESS,	
+	TEMPLATE_ORDER,	
+	TEMPLATE_PREVIEW,
+	TEMPLATE_TYPE,	
+	TEMPLATE_FILTER,	
+	IS_VALID,	
+	CREATE_USER_CODE,	
+	CREATE_TIME,	
+	UPDATE_USER_CODE,
+	UPDATE_TIME	
+)VALUES(
+	#templateId#,	
+	#templateCode#,	
+	#templateName#,	
+	#templateAddress#,	
+	#templateOrder#,	
+	#templatePreview#,	
+	#templateType#,	
+	#templateFilter#,
+	#isValid#,	
+	#createUserCode#,	
+	#createTime#,	
+	#updateUserCode#,	
+	#updateTime#	
+)
+</insert>
+<!--修改-->
+<update id="updTemplate" parameterClass="templateEntity">
+	UPDATE
+	cfj_template
+	SET
+	TEMPLATE_ID=#templateId#,	
+	TEMPLATE_CODE=#templateCode#,	
+	TEMPLATE_NAME=#templateName#,	
+	TEMPLATE_ADDRESS=#templateAddress#,	
+	TEMPLATE_ORDER=#templateOrder#,	
+	TEMPLATE_PREVIEW=#templatePreview#,	
+	IS_VALID=#isValid#,	
+	CREATE_USER_CODE=#createUserCode#,	
+	CREATE_TIME=#createTime#,	
+	UPDATE_USER_CODE=#updateUserCode#,	
+	UPDATE_TIME=#updateTime#	
+	TEMPLATE_TYPE=#templateType#,	
+	TEMPLATE_FILTER=#templateFilter#,
+ 	WHERE 
+	TEMPLATE_ID=#templateId#
+</update>
+<!--删除-->
+<delete id="deleleteTemplate" parameterClass="java.util.Map">
+	DELETE FROM 
+	cfj_template
+	WHERE
+	TEMPLATE_ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</delete>
+</sqlMap>

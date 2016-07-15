@@ -1,0 +1,96 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="AttendanceSettingBo" type="com.zero2ipo.eeh.AttendanceSetting.bo.AttendanceSettingBo"/>
+	<resultMap class="AttendanceSettingBo" id="AttendanceSettingMap">
+		<result property="before_xx_minute" column="before_xx_minute"/>
+		<result property="after_xx_minute" column="after_xx_minute"/>
+		<result property="after_xx_minute_late" column="after_xx_minute_late"/>
+		<result property="after_xx_minute_duty" column="after_xx_minute_duty"/>
+		<result property="status" column="status"/>
+		<result property="id" column="id"/>
+	</resultMap>
+	<!--根据id查询查询-->
+	<select id='findAttendanceSettingById' resultClass='AttendanceSettingBo'>
+		SELECT
+		id,
+		before_xx_minute,
+		after_xx_minute,
+		after_xx_minute_late,
+		after_xx_minute_duty,
+		status
+		FROM
+		eeh_Attendance_Setting
+		WHERE  id=#id#
+	</select>
+
+	<!--查询-->
+	<select id='findAttendanceSettingList' resultMap='AttendanceSettingMap'>
+		SELECT
+			id,
+			before_xx_minute,
+			after_xx_minute,
+			after_xx_minute_late,
+			after_xx_minute_duty,
+			status
+		FROM
+		eeh_Attendance_Setting
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="status">
+				status=#status#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<!--查询个数-->
+	<select id='findAttendanceSettingListCount' resultClass='java.lang.Integer'>
+		SELECT
+		count(0)
+		FROM
+		eeh_Attendance_Setting
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="status">
+				status=#status#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<!--新增-->
+	<insert id="add_AttendanceSetting" parameterClass="AttendanceSettingBo">
+		INSERT INTO
+		eeh_Attendance_Setting(
+			before_xx_minute,
+			after_xx_minute,
+			after_xx_minute_late,
+			after_xx_minute_duty,
+			status
+		)VALUES(
+			#before_xx_minute#,
+			#after_xx_minute#,
+			#after_xx_minute_late#,
+			#after_xx_minute_duty#,
+			#status#
+		)
+	</insert>
+	<!--修改-->
+	<update id="upd_AttendanceSetting" parameterClass="AttendanceSettingBo">
+		UPDATE
+			eeh_Attendance_Setting
+		SET
+			before_xx_minute=#before_xx_minute#,
+			after_xx_minute=#after_xx_minute#,
+			after_xx_minute_late=#after_xx_minute_late#,
+			after_xx_minute_duty=#after_xx_minute_duty#,
+			status=#status#
+		WHERE
+		ID=#id#
+	</update>
+	<!--删除-->
+	<delete id="del_AttendanceSetting" parameterClass="java.util.Map">
+		DELETE FROM
+		eeh_Attendance_Setting
+		WHERE
+		ID IN
+		<iterate property="id" conjunction="," close=")" open="(">
+			#id[]#
+		</iterate>
+	</delete>
+</sqlMap>

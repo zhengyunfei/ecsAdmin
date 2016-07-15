@@ -1,0 +1,140 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="ArticleBo" type="com.zero2ipo.cfj.article.bo.ArticleBo"/>
+<resultMap class="ArticleBo" id="ArticleMap">
+	<result property="thumbnail" column="thumbnail"/>
+	<result property="type" column="type"/>
+	<result property="content" column="content"/>
+	<result property="title" column="title"/>
+	<result property="time" column="time"/>
+	<result property="articleId" column="articleId"/>
+	<result property="gradeName" column="gradeName"/>
+	<result property="remark" column="remark"/>
+	<result property="motto" column="motto"/>
+</resultMap>
+<!--查询-->
+
+<select id='findArticleList' resultMap='ArticleMap'>
+SELECT
+	thumbnail,
+	type,
+	content,
+	title,
+	time,
+	articleId,
+	gradeName,
+	remark,
+	motto
+FROM eeh_article
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="gradeName">
+		INSTR(gradeName,#gradeName#)>0
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="type">
+		type=#type#
+	</isNotEmpty>
+</dynamic>
+</select>
+
+	<select id='findArticleById' resultClass='ArticleBo'>
+		SELECT
+			thumbnail,
+			type,
+			content,
+			title,
+			time,
+			articleId,
+			gradeName,
+			remark,
+			motto
+		FROM
+		 	eeh_article
+		WHERE
+			articleId=#articleId#
+	</select>
+	<select id='findArticleListCount' resultClass='java.lang.Integer'>
+		SELECT
+			count(0)
+		FROM eeh_article
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="gradeName">
+				gradeName=#gradeName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="type">
+				type=#type#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+<!--新增-->
+<insert id="addArticle" parameterClass="ArticleBo">
+	INSERT INTO eeh_article(
+	thumbnail,
+	type,
+	content,
+	title,
+	time,
+	articleId,
+	gradeName,
+	remark,
+	motto
+)VALUES(
+	#thumbnail#,
+	#type#,
+	#content#,
+	#title#,
+	#time#,
+	#articleId#,
+	#gradeName#,
+	#remark#,
+	#motto#
+)
+</insert>
+<!--修改-->
+<update id="updArticle" parameterClass="ArticleBo">
+	UPDATE
+		eeh_article
+	<dynamic prepend="SET">
+		<isNotEmpty prepend="," property="thumbnail">
+			thumbnail=#thumbnail#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="type">
+			type=#type#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="content">
+			content=#content#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="title">
+			title=#title#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="time">
+			time=#time#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="remark">
+			remark=#remark#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="motto">
+			motto=#motto#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="gradeName">
+			gradeName=#gradeName#
+		</isNotEmpty>
+		<isEmpty prepend="," property="gradeName">
+			gradeName=''
+		</isEmpty>
+
+	</dynamic>
+ 	WHERE
+		articleId=#articleId#
+</update>
+<!--删除-->
+<delete id="delArticle" parameterClass="java.util.Map">
+	DELETE FROM
+		eeh_article
+	WHERE
+	articleId IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+</delete>
+</sqlMap>

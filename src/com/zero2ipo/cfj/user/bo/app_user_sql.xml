@@ -1,0 +1,147 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.app.mobile.user">
+<typeAlias alias="appUserBo" type="com.zero2ipo.cfj.user.bo.Users"/>
+<resultMap class="appUserBo" id="appUserMap">
+	<result property="id" column="id"/>
+	<result property="userId" column="user_id"/>
+	<result property="phoneNum" column="phone_num"/>
+	<result property="account" column="account"/>
+	<result property="password" column="password"/>
+	<result property="createTime" column="create_time"/>
+	<result property="updateTime" column="update_time"/>
+	<result property="level" column="level"/>
+	<result property="openId" column="open_id"/>
+</resultMap>
+<!--查询-->
+
+<select id='findUsersList' resultMap='appUserMap'>
+SELECT
+	id,	
+	user_id,	
+	phone_num,	
+	account,	
+	password,	
+	create_time,	
+	update_time,
+	open_id,
+	level	
+FROM users
+<dynamic prepend="WHERE">
+<isNotEmpty prepend="AND" property="mobile">
+	phone_num=#mobile#
+</isNotEmpty>
+</dynamic>
+</select>
+
+	<select id='findUsersListCount' resultClass='java.lang.Integer'>
+		SELECT
+			count(id)
+		FROM users
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="mobile">
+				phone_num=#mobile#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<update id="updateUserMobile" parameterClass="appUserBo">
+
+		UPDATE
+		users
+		set
+		phone_num=#phoneNum#
+		where
+		USER_ID=#userId#
+	</update>
+
+	<select id='findUsersByMap' resultMap='appUserMap'>
+		SELECT
+		id,
+		user_id,
+		phone_num,
+		account,
+		password,
+		create_time,
+		update_time,
+		open_id,
+		level
+		FROM users
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="userId">
+				INSTR(USER_ID,#userId#)>0
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="mobile">
+				phone_num=#mobile#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="password">
+				password=#password#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="openId">
+				open_id=#openId#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+<!--新增-->
+<insert id="addAppUsers" parameterClass="appUserBo">
+	INSERT INTO users(
+	user_id,
+	phone_num,	
+	account,	
+	password,	
+	create_time,	
+	update_time,	
+	level,
+	open_id
+)VALUES(
+	#userId#,
+	#phoneNum#,	
+	#account#,	
+	#password#,	
+	now(),
+	now(),
+	#level#,
+	#openId#
+)
+</insert>
+<!--修改-->
+<update id="updAppUsers" parameterClass="appUserBo">
+	UPDATE
+		users
+	<dynamic prepend="SET">
+		<isNotEmpty prepend="," property="phoneNum">
+			phone_num=#phoneNum#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="account">
+			account=#account#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="password">
+			password=#password#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="updateTime">
+			update_time=#updateTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="level">
+			level=#level#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="openId">
+			open_id=#openId#
+		</isNotEmpty>
+	</dynamic>
+ 	WHERE
+	user_id=#userId#
+</update>
+<!--删除-->
+<delete id="delAppUsers" parameterClass="java.util.Map">
+	DELETE FROM 
+	users
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</delete>
+<!--修改密码-->
+<update id="updateUserPassword">
+	UPDATE users SET password = #password# WHERE phone_num = #phoneNum#
+</update>
+</sqlMap>

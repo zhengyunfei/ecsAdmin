@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap>
+<!--ibatis 主配置文件-->
+<!-- <sqlMapConfig>-->
+	 <!--是否启用延迟加载机制-->
+	 <!--是否启用字节码增强机制-->
+	 <!--是否启用错误处理机制-->
+	 <!--最大并发请求数-->
+	 <!--最大Session数-->
+	 <!--最大并发事务数-->
+	 <!--是否启用名称空间
+   <settings cacheModelsEnabled="true" 
+   lazyLoadingEnabled="true"   
+   enhancementEnabled="true"    
+   errorTracingEnabled="true"    
+   maxRequests="32"    
+   maxSessions="10"    
+   maxTransactions="5"    
+   useStatementNamespaces="true"/> -->
+<!--</sqlMapConfig>-->
+
+</sqlMap>

@@ -1,0 +1,90 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="telMessageEntity" type="com.zero2ipo.module.entity.telMessage.TelMessageEntity"/>
+<resultMap class="telMessageEntity" id="telMessageMap">	
+	<result property="msgId" column="MSG_ID"/>
+	<result property="tel" column="TEL"/>
+	<result property="msgTime" column="MSG_TIME"/>
+	<result property="content" column="CONTENT"/>
+	<result property="typy" column="TYPY"/>
+	<result property="returnCode" column="RETURN_CODE"/>
+</resultMap>
+<!--查询-->
+
+<select id="findAllMessageList" resultMap="telMessageMap">
+SELECT
+	MSG_ID,	
+	TEL,	
+	MSG_TIME,	
+	CONTENT,	
+	TYPY,	
+	RETURN_CODE	
+FROM cfj_tel_message
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="msgId">
+	INSTR(MSG_ID,#msgId#)>0
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="tel">
+	INSTR(TEL,#tel#)>0
+	</isNotEmpty>
+</dynamic>
+order by MSG_TIME desc
+</select>
+
+<select id="findAllMessageListCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+SELECT
+	count(0)
+FROM cfj_tel_message
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="msgId">
+	INSTR(MSG_ID,#msgId#)>0
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="tel">
+		INSTR(TEL,#tel#)>0
+	</isNotEmpty>
+</dynamic>
+</select>
+<!--新增-->
+<insert id="addTelMessage" parameterClass="telMessageEntity">
+	INSERT INTO cfj_tel_message(
+	MSG_ID,	
+	TEL,	
+	MSG_TIME,	
+	CONTENT,	
+	TYPY,	
+	RETURN_CODE	
+)VALUES(
+	#msgId#,	
+	#tel#,	
+	now(),	
+	#content#,	
+	#typy#,	
+	#returnCode#	
+)
+</insert>
+<!--修改-->
+<update id="updTelMessage" parameterClass="telMessageEntity">
+	UPDATE
+	cfj_tel_message
+	SET
+	MSG_ID=#msgId#,	
+	TEL=#tel#,	
+	MSG_TIME=#msgTime#,	
+	CONTENT=#content#,	
+	TYPY=#typy#,	
+	RETURN_CODE=#returnCode#	
+ 	WHERE 
+	MSG_ID=#msgId#
+</update>
+<!--删除-->
+<delete id="delTelMessage" parameterClass="java.util.Map">
+	DELETE FROM 
+	cfj_tel_message
+	WHERE
+	MSG_ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</delete>
+</sqlMap>

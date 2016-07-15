@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+                            http://www.springframework.org/schema/context   
+                            http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+                            http://cxf.apache.org/jaxws   
+                            http://cxf.apache.org/schemas/jaxws.xsd
+                            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<mvc:annotation-driven />
+
+	<context:component-scan base-package="com.zero2ipo.plugins.*" />
+	<context:component-scan base-package="com.zero2ipo.cfj.*" />
+	<context:component-scan base-package="com.zero2ipo.*" />
+	<context:component-scan base-package="com.zero2ipo.webservices.*" />
+	<context:component-scan base-package="com.zero2ipo.webservices.user.*" />
+
+	<!--配置webc层 springmvc的范围 -->
+	<jaxws:endpoint id="userService"
+		implementor="com.webservices.user.UserServicesImpl" address="/userService">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<ref bean="wss4jInConfiguration" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor" />
+			<ref bean="wss4jOutConfiguration" />
+		</jaxws:outInterceptors>
+	</jaxws:endpoint>
+	<jaxws:endpoint id="crmSysUserService"
+		implementor="com.webservices.user.CrmSysUserService" address="/crmSysUserService">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<ref bean="wss4jInConfiguration" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor" />
+			<ref bean="wss4jOutConfiguration" />
+		</jaxws:outInterceptors>
+	</jaxws:endpoint>
+	<!-- 用户/密码校验配置 -->
+	<bean id="wss4jInConfiguration" class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+		<property name="properties">
+			<map>
+				<entry key="action" value="Timestamp Encrypt Signature" />
+				<entry key="decryptionPropFile" value="server_insecurity_enc.properties" />
+				<entry key="signaturePropFile" value="server_insecurity_sign.properties" />
+				<entry>
+					<key>
+						<value>passwordCallbackRef</value>
+					</key>
+					<ref bean="passwordCallback" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="wss4jOutConfiguration" class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
+		<property name="properties">
+			<map>
+				<entry key="action" value="Timestamp Encrypt Signature" />
+				<entry key="user" value="cfjserver" />
+				<entry key="encryptionUser" value="cfjclient" />
+				<entry key="encryptionPropFile" value="server_outsecurity_enc.properties" />
+				<entry key="signaturePropFile" value="server_insecurity_sign.properties" />
+				<entry>
+					<key>
+						<value>passwordCallbackRef</value>
+					</key>
+					<ref bean="passwordCallback" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="passwordCallback" class="com.zero2ipo.webservices.security.PasswordHandler" />
+
+</beans>

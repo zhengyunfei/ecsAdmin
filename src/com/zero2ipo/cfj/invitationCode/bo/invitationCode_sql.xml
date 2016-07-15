@@ -1,0 +1,56 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="invitationCodeEntity" type="com.zero2ipo.module.entity.invitationCode.InvitationCodeEntity"/>
+<resultMap class="invitationCodeEntity" id="invitationCodeMap">	
+	<result property="id" column="id"/>
+	<result property="userId" column="userId"/>
+	<result property="value" column="value"/>
+</resultMap>
+<!--查询-->
+
+<select id="findInvitationCodeList" resultMap="invitationCodeMap">
+SELECT
+	id,	
+	userId,	
+	value	
+FROM cfj_invitation_code
+<dynamic prepend="WHERE">
+<isNotEmpty prepend="AND" property="userName">
+				useName=#userName#
+</isNotEmpty>
+</dynamic>
+ ORDER BY id DESC
+</select>
+<select id="findInvitationCodeBo" resultMap="invitationCodeMap">
+SELECT
+	id,	
+	userId,	
+	value	
+FROM cfj_invitation_code
+where id=#id#
+
+</select>
+<!--新增-->
+<insert id="addInvitationCode" parameterClass="invitationCodeEntity">
+	INSERT INTO cfj_invitation_code(
+	id,	
+	userId,	
+	value	
+)VALUES(
+	#id#,	
+	#userId#,	
+	#value#	
+)
+</insert>
+<!--删除-->
+<delete id="deleteInvitationCode" parameterClass="java.util.Map">
+	DELETE FROM 
+	cfj_invitation_code
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</delete>
+</sqlMap>

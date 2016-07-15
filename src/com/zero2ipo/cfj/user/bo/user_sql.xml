@@ -1,0 +1,419 @@
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="vipEntity" type="com.zero2ipo.module.entity.user.UserEntity"/>
+<typeAlias alias="userInfoEntity" type="com.zero2ipo.module.entity.user.UserInfoEntity"/>
+<typeAlias alias="organInfoEntity" type="com.zero2ipo.module.entity.user.OrganizationUserInfoEntity"/>
+<!-- 个人会员管理 -->
+<resultMap class="vipEntity" id="Cfj_user">
+	<result property="userId" column="USER_ID"/>
+	<result property="userName" column="USER_NAME"/>
+	<result property="userPassword" column="USER_PASSWORD"/>
+	<result property="mobile" column="MOBILE"/>
+	<result property="userStatus" column="USER_STATUS"/>
+	<result property="userGroup" column="USER_GROUP"/>
+	<result property="userInputtime" column="USER_INPUTTIME"/>
+	<result property="userLoginnum" column="USER_LOGINNUM"/>
+	<result property="userLasttime" column="USER_LASTTIME"/>
+	<result property="remark" column="REMARK"/>
+	<result property="userIrId" column="USER_IR_ID"/>
+	<result property="areaName" column="AREA_NAME"/>
+	<result property="jrMoney" column="JR_MONEY"/>
+	<result property="source" column="SOURCE"/>
+	<!-- 另外1张表
+	<result property="userInfo.userInfoId" column="USER_INFO_ID"/>
+	<result property="userInfo.userId" column="USER_ID"/>
+	<result property="userInfo.userName" column="USER_REAL_NAME"/>
+	<result property="userInfo.sex" column="SEX"/>
+	<result property="userInfo.maile" column="MAILE"/>
+	<result property="userInfo.position" column="POSITION"/>
+	<result property="userInfo.company" column="COMPANY"/>
+	<result property="userInfo.likePro" column="LIKE_PRO"/>
+	<result property="userInfo.userCardUrl" column="USER_CARD_URL"/>
+	<result property="userInfo.column9" column="Column_9"/>
+	<result property="userInfo.idCardUrl" column="ID_CARD_URL"/>
+	<result property="userInfo.idCard" column="ID_CARD"/>
+	
+	<result property="userInfo.invitationCode" column="CUI.INVITATION_CODE"/>
+	<result property="userInfo.assest" column="ASSETS"/>
+	<result property="userInfo.arpm" column="ARPM"/>
+	<result property="userInfo.codeArea" column="codeArea"/>
+	<result property="userInfo.userPhoto" column="USER_PHOTO"/>
+	 -->
+</resultMap>
+<!-- 机构会员管理 -->
+<resultMap class="vipEntity" id="organMap">
+	<result property="userId" column="USER_ID"/>
+	<result property="userName" column="USER_NAME"/>
+	<result property="userPassword" column="USER_PASSWORD"/>
+	<result property="mobile" column="MOBILE"/>
+	<result property="userStatus" column="USER_STATUS"/>
+	<result property="userGroup" column="USER_GROUP"/>
+	<result property="userInputtime" column="USER_INPUTTIME"/>
+	<result property="userLoginnum" column="USER_LOGINNUM"/>
+	<result property="userLasttime" column="USER_LASTTIME"/>
+	<result property="remark" column="REMARK"/>
+	<result property="userIrId" column="USER_IR_ID"/>
+	<!-- 另外1张表 -->
+	<result property="orgUserInfo.orgUserInfoId" column="ORG_USER_INFO_ID"/>
+	<result property="orgUserInfo.userId" column="USER_ID"/>
+	<result property="orgUserInfo.orgName" column="ORG_NAME"/>
+	<result property="orgUserInfo.orgDutypersonSex" column="ORG_DUTYPERSON_SEX"/>
+	<result property="orgUserInfo.orgDutypepsonEmaile" column="ORG_DUTYPEPSON_EMAILE"/>
+	<result property="orgUserInfo.orgDutypersonPosition" column="ORG_DUTYPERSON_POSITION"/>
+	<result property="orgUserInfo.orgDutypersonCardurl" column="ORG_DUTYPERSON_CARDURL"/>
+	<result property="orgUserInfo.orgLicenseUrl" column="ORG_LICENSE_URL"/>
+	<result property="orgUserInfo.invitationCode" column="INVITATION_CODE"/>
+	<result property="orgUserInfo.codeArea" column="codeArea"/>
+</resultMap>
+<resultMap class="vipEntity" id="organUserMap">
+	<!-- 另外1张表 -->
+	<result property="orgUserInfo.orgUserInfoId" column="ORG_USER_INFO_ID"/>
+	<result property="userId" column="USER_ID"/>
+	<result property="orgUserInfo.orgName" column="ORG_NAME"/>
+	<result property="orgUserInfo.orgDutypersonSex" column="ORG_DUTYPERSON_SEX"/>
+	<result property="orgUserInfo.orgDutypepsonEmaile" column="ORG_DUTYPEPSON_EMAILE"/>
+	<result property="orgUserInfo.orgDutypersonPosition" column="ORG_DUTYPERSON_POSITION"/>
+	<result property="orgUserInfo.orgDutypersonCardurl" column="ORG_DUTYPERSON_CARDURL"/>
+	<result property="orgUserInfo.orgLicenseUrl" column="ORG_LICENSE_URL"/>
+	<result property="orgUserInfo.invitationCode" column="INVITATION_CODE"/>
+	<result property="orgUserInfo.codeArea" column="codeArea"/>
+</resultMap>
+<!--查询-->
+<select id='findVipInfoList' resultMap='Cfj_user'>
+SELECT
+	CU.USER_ID,	
+	CU.USER_NAME,	
+	CU.USER_PASSWORD,	
+	CU.MOBILE,	
+	CU.USER_STATUS,	
+	CU.USER_GROUP,	
+	CU.USER_INPUTTIME,	
+	CU.USER_LOGINNUM,	
+	CU.USER_LASTTIME,	
+	CU.REMARK,
+	CU.USER_IR_ID,
+	CU.JR_MONEY,
+	CU.AREA_NAME,
+	CU.SOURCE
+FROM CFJ_USER CU
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="mobile">
+		INSTR(CU.MOBILE,#mobile#)>0
+	</isNotEmpty>
+	
+	<isNotEmpty prepend="AND" property="userStatus">
+		INSTR(CU.USER_STATUS,#userStatus#)>0
+	</isNotEmpty>
+	</dynamic>
+order by CU.USER_INPUTTIME DESC
+</select>
+
+<select id='findOrganInfoList' resultMap="organUserMap">
+SELECT
+	CUI.ORG_USER_INFO_ID,
+	CUI.USER_ID,
+	CUI.ORG_NAME,
+	CUI.ORG_DUTYPERSON_SEX,
+	CUI.ORG_DUTYPEPSON_EMAILE,
+	CUI.ORG_DUTYPERSON_POSITION,
+	CUI.ORG_DUTYPERSON_CARDURL,
+	CUI.ORG_LICENSE_URL,
+	CUI.INVITATION_CODE,
+	CUI.codeArea
+FROM  cfj_organization_user_info CUI 
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="mobile">
+		CUI.USER_ID IN
+		(SELECT 
+			USER_ID
+		 FROM
+		 	 CFJ_USER CU 
+		 WHERE 
+		 	CU.USER_ID=CUI.USER_ID 
+		AND 
+			INSTR(CU.MOBILE,#mobile#)>0)
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="userName">
+	CUI.USER_ID IN
+		(SELECT 
+			USER_ID
+		 FROM
+		 	 CFJ_USER CU 
+		 WHERE 
+		 	CU.USER_ID=CUI.USER_ID 
+		AND 
+			INSTR(CU.USER_NAME,#userName#)>0)
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="userStatus">
+	CUI.USER_ID IN
+		(SELECT 
+			USER_ID
+		 FROM
+		 	 CFJ_USER CU 
+		 WHERE 
+		 	CU.USER_ID=CUI.USER_ID 
+		AND 
+		INSTR(CU.USER_STATUS,#userStatus#)>0)
+	</isNotEmpty>
+</dynamic>
+
+</select>
+
+<select id='findVipManageById' resultClass='vipEntity'>
+SELECT
+	CU.USER_ID userId,	
+	CU.USER_NAME userName,	
+	CU.USER_PASSWORD userPassword,	
+	CU.MOBILE,	
+	CU.USER_STATUS userStatus,	
+	CU.USER_GROUP userGroup,	
+	CU.USER_INPUTTIME userInputTime,	
+	CU.USER_LOGINNUM userLoginNum,	
+	CU.USER_LASTTIME userLastTime,	
+	CU.remark,
+	CU.JR_MONEY jrMoney,
+	CU.AREA_NAME areaName,
+	CU.USER_IR_ID,
+	CU.OPEN_ID openId,
+	CU.SOURCE source
+FROM cfj_user CU
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="userId">
+		CU.USER_ID=#userId#
+	</isNotEmpty>
+</dynamic>
+</select>
+<!--个人明细查询 -->
+	<resultMap id="infoMap" class="userInfoEntity">
+		<result property="userInfoId" column="USER_INFO_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="sex" column="SEX"/>
+		<result property="maile" column="MAILE"/>
+		<result property="position" column="POSITION"/>
+		<result property="company" column="COMPANY"/>
+		<result property="likePro" column="LIKE_PRO"/>
+		<result property="userCardUrl" column="USER_CARD_URL"/>
+		<result property="column9" column="Column_9"/>
+		<result property="idCardUrl" column="ID_CARD_URL"/>
+		<result property="idCard" column="ID_CARD"/>
+		<result property="invitationCode" column="CUI.INVITATION_CODE"/>
+		<result property="assest" column="ASSETS"/>
+		<result property="arpm" column="ARPM"/>
+		<result property="codeArea" column="codeArea"/>
+		<result property="userPhoto" column="USER_PHOTO"/>
+		<result property="remark" column="REMARK"/>
+	</resultMap>
+<select id="findUserInfoDetail" resultMap="infoMap">
+	SELECT 
+		CUI.USER_INFO_ID,
+		CUI.USER_ID,
+		CUI.USER_NAME,
+		CUI.SEX,
+		CUI.MAILE,
+		CUI.POSITION,
+		CUI.COMPANY,
+		CUI.LIKE_PRO,
+		CUI.Column_9,
+		CUI.USER_CARD_URL,
+		CUI.ID_CARD_URL,
+		CUI.ID_CARD ,
+		CUI.INVITATION_CODE ,
+		CUI.ASSETS ,
+		CUI.ARPM,
+		CUI.codeArea,
+		CUI.USER_PHOTO,
+		CUI.remark
+	FROM
+		CFJ_USER_INFO CUI
+	WHERE 
+	CUI.user_id=#userId#
+</select>
+<!--机构明细查询 -->
+<select id="findOrganInfoDetail" resultClass="organInfoEntity">
+SELECT
+	CUI.ORG_NAME orgName,
+	CUI.ORG_ASSETS orgAssets,
+	CUI.ORG_DUTYPERSON_NAME orgDutypersonName,
+	CUI.ORG_DUTYPEPSON_MOBILE orgDutypepsonMobile,
+	CUI.LIKE_PRODUCTS likeProducts,
+	CUI.ORG_DUTYPERSON_SEX orgDutypersonSex,
+	CUI.ORG_DUTYPEPSON_EMAILE orgDutypepsonEmaile,
+	CUI.ORG_DUTYPERSON_POSITION orgDutypersonPosition,
+	CUI.ORG_DUTYPERSON_CARDURL orgDutypersonCardurl,
+	CUI.ORG_LICENSE_URL orgLicenseUrl,
+	CUI.INVITATION_CODE invitationCode,
+	CUI.codeArea codeArea,
+	CUI.remark
+FROM 
+	CFJ_ORGANIZATION_USER_INFO CUI
+WHERE
+	CUI.USER_ID=#userId#
+</select>
+<!--查询-->
+<select id="findVipInfoListCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+SELECT
+	COUNT(0)
+FROM CFJ_USER CU
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="mobile">
+		INSTR(CU.MOBILE,#mobile#)>0
+	</isNotEmpty>
+	
+	<isNotEmpty prepend="AND" property="userStatus">
+		INSTR(CU.USER_STATUS,#userStatus#)>0
+	</isNotEmpty>
+	</dynamic>
+</select>
+<select id="findOrganInfoListCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+SELECT
+	count(0)
+FROM  cfj_organization_user_info CUI 
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="userId">
+		INSTR(CUI.USER_ID,#userId#)>0
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="userName">
+	CUI.USER_ID IN
+		(SELECT 
+			USER_ID
+		 FROM
+		 	 CFJ_USER CU 
+		 WHERE 
+		 	CU.USER_ID=CUI.USER_ID 
+		AND 
+			INSTR(CU.USER_NAME,#userName#)>0)
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="userStatus">
+	CUI.USER_ID IN
+		(SELECT 
+			USER_ID
+		 FROM
+		 	 CFJ_USER CU 
+		 WHERE 
+		 	CU.USER_ID=CUI.USER_ID 
+		AND 
+		INSTR(CU.USER_STATUS,#userStatus#)>0)
+	</isNotEmpty>
+</dynamic>
+
+</select>
+<!--新增-->
+<insert id="addVipManage" parameterClass="vipEntity">
+	INSERT INTO cfj_user(
+	USER_ID,	
+	USER_NAME,	
+	USER_PASSWORD,	
+	MOBILE,	
+	USER_STATUS,	
+	USER_GROUP,	
+	USER_INPUTTIME,	
+	USER_LOGINNUM,	
+	USER_LASTTIME,	
+	CREATE_USER_CODE,	
+	CREATE_TIME,	
+	UPDATE_USER_CODE,	
+	UPDATE_TIME,	
+	REMARK,
+	USER_IR_ID
+)VALUES(
+	#userId#,	
+	#userName#,	
+	#userPassword#,	
+	#mobile#,	
+	#userStatus#,	
+	#userGroup#,	
+	#userInputtime#,	
+	#userLoginnum#,	
+	#userLasttime#,	
+	#remark#,
+	#userIrId#	
+)
+</insert>
+<!--修改-->
+<update id="updVipManage" parameterClass="vipEntity">
+	UPDATE
+	cfj_user
+	SET
+		REMARK=#remark#,
+		JR_MONEY=#jrMoney#,
+		AREA_NAME=#areaName#
+ 	WHERE
+	USER_ID=#userId#
+</update>
+<!--修改个人会员信息-->
+<update id="updUserInfo" parameterClass="userInfoEntity">
+	UPDATE
+		CFJ_USER_INFO
+	SET
+		codeArea=#codeArea#,
+		remark=#remark#
+ 	WHERE 
+	USER_ID=#userId#
+</update>
+<update id="updOrganInfo" parameterClass="organInfoEntity">
+	UPDATE
+		CFJ_ORGANIZATION_USER_INFO
+		
+	SET 
+		 codeArea=#codeArea#,
+		 remark=#remark#
+	 WHERE 
+	 USER_ID=#userId#
+</update>
+<!--删除USER-->
+<delete id="delVipManager" parameterClass="java.util.Map">
+	DELETE FROM 
+	cfj_user
+	WHERE
+	USER_ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</delete>
+<!-- 删除userInfo -->
+<delete id="deleleUserInfo" parameterClass="java.util.Map">
+	DELETE FROM 
+	cfj_user_info
+	WHERE
+	USER_ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</delete>
+<!-- 批量更新状态 -->
+<update id="updGroupSelectAllUser" parameterClass="java.util.Map">
+	update cfj_user
+	set 
+	USER_GROUP=#userGroup#
+	WHERE
+	USER_ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</update>
+<!-- 批量更新会员等级 -->
+<update id="updSelectAllUser" parameterClass="java.util.Map">
+	update cfj_user
+	set 
+	USER_STATUS=#userStatus#
+	WHERE
+	USER_ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate> 
+</update>
+<!-- 重置密码信息 -->
+	<update id="updResetPwd" parameterClass="java.util.Map">
+		UPDATE 
+			cfj_user
+		SET USER_PASSWORD = #userPassword#
+		WHERE 
+		USER_ID IN
+		<iterate property="id" conjunction="," close=")" open="(">
+		#id[]#
+		</iterate> 
+	</update>	
+</sqlMap>

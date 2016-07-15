@@ -1,0 +1,157 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="CourseBo" type="com.zero2ipo.eeh.course.bo.CourseBo"/>
+<resultMap class="CourseBo" id="CourseMap">
+	<result property="id" column="id"/>
+	<result property="courseName" column="courseName"/>
+	<result property="kemu" column="kemu"/>
+	<result property="peopleMax" column="peopleMax"/>
+	<result property="schoolTime" column="schoolTime"/>
+	<result property="classRoom" column="classRoom"/>
+	<result property="teacher" column="teacher"/>
+	<result property="week" column="week"/>
+	<result property="status" column="status"/>
+	<result property="seatSetStatus" column="seatSetStatus"/>
+</resultMap>
+	<!--根据id查询查询-->
+	<select id='findCourseById' resultClass='CourseBo'>
+		SELECT
+		id,
+		courseName,
+		kemu,
+		peopleMax,
+		schoolTime,
+		classRoom,
+		week,
+		teacher,
+		status,
+		seatSetStatus
+		FROM
+			eeh_Course
+		WHERE  id=#id#
+	</select>
+
+<!--查询-->
+<select id='findCourseList' resultMap='CourseMap'>
+SELECT
+	id,
+	courseName,
+	kemu,
+	peopleMax,
+	schoolTime,
+	classRoom,
+	week,
+	teacher,
+	status,
+	seatSetStatus
+FROM
+	eeh_Course
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="kemu">
+		kemu=#kemu#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="courseName">
+		courseName=#courseName#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="classRoom">
+		classRoom=#classRoom#
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="seatSetStatus">
+		seatSetStatus=#seatSetStatus#
+	</isNotEmpty>
+</dynamic>
+</select>
+<!--查询个数-->
+	<select id='findCourseListCount' resultClass='java.lang.Integer'>
+		SELECT
+		count(0)
+		FROM
+		eeh_Course
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="kemu">
+				kemu=#kemu#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="courseName">
+				courseName=#courseName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="classRoom">
+				classRoom=#classRoom#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="seatSetStatus">
+				seatSetStatus=#seatSetStatus#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+<!--新增-->
+<insert id="add_Course" parameterClass="CourseBo">
+	INSERT INTO
+		eeh_Course(
+		courseName,
+		kemu,
+		peopleMax,
+		schoolTime,
+		classRoom,
+		week,
+		teacher,
+	    status,
+	    seatSetStatus
+	)VALUES(
+		#courseName#,
+		#kemu#,
+		#peopleMax#,
+		#schoolTime#,
+		#classRoom#,
+		#week#,
+		#teacher#,
+		#status#,
+		0
+	)
+</insert>
+<!--修改-->
+<update id="upd_Course" parameterClass="CourseBo">
+	UPDATE
+		eeh_Course
+	<dynamic prepend="SET">
+		<isNotEmpty prepend="," property="kemu">
+			kemu=#kemu#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="courseName">
+			courseName=#courseName#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="peopleMax">
+			peopleMax=#peopleMax#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="schoolTime">
+			schoolTime=#schoolTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="classRoom">
+			classRoom=#classRoom#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="week">
+			week=#week#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="teacher">
+			teacher=#teacher#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="status">
+			status=#status#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="seatSetStatus">
+			seatSetStatus=#seatSetStatus#
+		</isNotEmpty>
+	</dynamic>
+ 	WHERE
+	ID=#id#
+</update>
+<!--删除-->
+<delete id="del_Course" parameterClass="java.util.Map">
+	DELETE FROM
+	eeh_Course
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+</delete>
+</sqlMap>

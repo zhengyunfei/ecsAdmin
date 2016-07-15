@@ -1,0 +1,144 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="wx_user" type="org.jeewx.api.wxuser.user.model.Wxuser"/>
+<resultMap class="Wx_user" id="Wx_user">
+	<result property="subscribe" column="subscribe"/>
+	<result property="openid" column="openid"/>
+	<result property="nickname" column="nickname"/>
+	<result property="sex" column="sex"/>
+	<result property="city" column="city"/>
+	<result property="country" column="country"/>
+	<result property="province" column="province"/>
+	<result property="language" column="language"/>
+	<result property="headimgurl" column="headimgurl"/>
+	<result property="subscribe_time" column="subscribe_time"/>
+	<result property="remark" column="remark"/>
+	<result property="unionid" column="user_id"/>
+</resultMap>
+
+<select id='findWx_userList' resultMap='Wx_user'>
+SELECT
+	subscribe,
+	openid,
+	nickname,
+	sex,
+	city,
+	country,
+	province,
+	language,
+	headimgurl,
+	subscribe_time,
+	remark,
+	user_id
+FROM wx_user
+	<dynamic prepend="WHERE">
+		<isNotEmpty prepend="AND" property="openid">
+			INSTR(openid,#openid#)>0
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="nickname">
+			INSTR(nickname,#nickname#)>0
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="unionid">
+			user_id=#unionid#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="country">
+			country=#country#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="province">
+			province=#province#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="city">
+			city=#city#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="sex">
+			sex=#sex#
+		</isNotEmpty>
+	</dynamic>
+</select>
+
+<select id='findWxUserCount' resultClass='java.lang.Integer'>
+SELECT
+	count(0)
+FROM wx_user
+<dynamic prepend="WHERE">
+<isNotEmpty prepend="AND" property="openid">
+INSTR(openid,#openid#)>0
+</isNotEmpty>
+<isNotEmpty prepend="AND" property="nickname">
+INSTR(nickname,#nickname#)>0
+</isNotEmpty>
+<isNotEmpty prepend="AND" property="unionid">
+user_id=#unionid#
+</isNotEmpty>
+<isNotEmpty prepend="AND" property="country">
+	country=#country#
+</isNotEmpty>
+<isNotEmpty prepend="AND" property="province">
+	province=#province#
+</isNotEmpty>
+<isNotEmpty prepend="AND" property="city">
+	city=#city#
+</isNotEmpty>
+<isNotEmpty prepend="AND" property="sex">
+sex=#sex#
+</isNotEmpty>
+</dynamic>
+</select>
+<insert id="addWx_user" parameterClass="wx_user">
+	INSERT INTO wx_user(
+	subscribe,
+	openid,
+	nickname,
+	sex,
+	city,
+	country,
+	province,
+	language,
+	headimgurl,
+	subscribe_time,
+	remark,
+	user_id
+)VALUES(
+	#subscribe#,
+	#openid#,
+	#nickname#,
+	#sex#,
+	#city#,
+	#country#,
+	#province#,
+	#language#,
+	#headimgurl#,
+	#subscribe_time#,
+	#remark#,
+	#unionid#
+)
+</insert>
+<update id="updWxUser" parameterClass="wx_user">
+	UPDATE
+	wx_user
+	SET
+	subscribe=#subscribe#,
+	openid=#openid#,
+	nickname=#nickname#,
+	sex=#sex#,
+	city=#city#,
+	country=#country#,
+	province=#province#,
+	language=#language#,
+	headimgurl=#headimgurl#,
+	subscribe_time=#subscribe_time#,
+	remark=#remark#
+ 	WHERE
+	openid=#openid#
+</update>
+<delete id="delWxUser">
+		DELETE FROM
+			wx_user
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="unionid">
+				INSTR(user_id,#unionid#)>0
+			</isNotEmpty>
+		</dynamic>
+</delete>
+</sqlMap>

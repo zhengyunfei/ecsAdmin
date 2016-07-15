@@ -1,0 +1,142 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="gradeBo" type="com.zero2ipo.eeh.grade.bo.GradeBo"/>
+<resultMap class="gradeBo" id="gradeMap">
+	<result property="id" column="id"/>
+	<result property="name" column="name"/>
+	<result property="gradeName" column="gradeName"/>
+	<result property="teacherName" column="teacherName"/>
+	<result property="gradenum" column="gradenum"/>
+	<result property="classCadre" column="classCadre"/>
+	<result property="seatStatus" column="seatStatus"/>
+</resultMap>
+	<!--根据id查询查询-->
+	<select id='findGradeBoById' resultClass='gradeBo'>
+		SELECT
+		id,
+		name,
+		gradeName,
+		teacherName,
+		gradenum,
+		classCadre,
+		seatStatus
+		FROM
+			eeh_grade
+		WHERE  id=#id#
+	</select>
+
+<!--查询-->
+<select id='findGradeList' resultMap='gradeMap'>
+SELECT
+	id,
+	name,
+	gradeName,
+	teacherName,
+	gradenum,
+	classCadre,
+	seatStatus
+FROM
+	eeh_grade
+<dynamic prepend="WHERE">
+	<isNotEmpty prepend="AND" property="name">
+		INSTR(name,#name#)>0
+	</isNotEmpty>
+	<isNotEmpty prepend="AND" property="gradeName">
+		gradeName=#gradeName#
+	</isNotEmpty>
+    <isNotEmpty prepend="AND" property="seatStatus">
+		seatStatus=#seatStatus#
+	</isNotEmpty>
+
+</dynamic>
+</select>
+	<select id='findGradeById' resultMap='gradeMap'>
+	SELECT
+	id,
+	name,
+	gradeName,
+	teacherName,
+	gradenum,
+	classCadre,
+	seatStatus
+	FROM
+	eeh_grade
+	where id=#id#
+</select>
+<!--查询个数-->
+	<select id='findGradeListCount' resultClass='java.lang.Integer'>
+		SELECT
+		count(0)
+		FROM
+		eeh_grade
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="name">
+				INSTR(name,#name#)>0
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="gradeName">
+				gradeName=#gradeName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="seatStatus">
+				seatStatus=#seatStatus#
+			</isNotEmpty>
+
+		</dynamic>
+	</select>
+<!--新增-->
+<insert id="add_Grade" parameterClass="gradeBo">
+	INSERT INTO
+		eeh_grade(
+		name,
+		gradeName,
+		teacherName,
+		gradenum,
+		classCadre,
+		seatStatus
+	)VALUES(
+		#name#,
+		#gradeName#,
+		#teacherName#,
+		#gradenum#,
+		#classCadre#,
+		#seatStatus#
+	)
+</insert>
+<!--修改-->
+<update id="upd_Grade" parameterClass="gradeBo">
+	UPDATE
+		eeh_grade
+	<dynamic prepend="SET">
+		<isNotEmpty prepend="," property="name">
+			name=#name#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="gradeName">
+			gradeName=#gradeName#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="teacherName">
+			teacherName=#teacherName#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="gradenum">
+			gradenum=#gradenum#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="classCadre">
+			classCadre=#classCadre#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="seatStatus">
+			seatStatus=#seatStatus#
+		</isNotEmpty>
+	</dynamic>
+ 	WHERE
+		ID=#id#
+</update>
+<!--删除-->
+<delete id="del_Grade" parameterClass="java.util.Map">
+	DELETE FROM
+	eeh_grade
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+</delete>
+</sqlMap>

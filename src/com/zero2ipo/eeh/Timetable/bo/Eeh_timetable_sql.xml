@@ -1,0 +1,134 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<typeAlias alias="TimetableBo" type="com.zero2ipo.eeh.Timetable.bo.TimetableBo"/>
+<resultMap class="TimetableBo" id="TimetableMap">
+	<result property="id" column="id"/>
+	<result property="week" column="week"/>
+	<result property="gradeName" column="gradeName"/>
+	<result property="firstClass" column="firstClass"/>
+	<result property="secondClass" column="secondClass"/>
+	<result property="threeClass" column="threeClass"/>
+	<result property="fourClass" column="fourClass"/>
+	<result property="fiveClass" column="fiveClass"/>
+	<result property="sixClass" column="sixClass"/>
+	<result property="sevenClass" column="sevenClass"/>
+	<result property="sixClass" column="sixClass"/>
+	<result property="sevenClass" column="sevenClass"/>
+	<result property="eightClass" column="eightClass"/>
+	<result property="nineClass" column="nineClass"/>
+</resultMap>
+	<!--根据id查询查询-->
+	<select id='findTimetableById' resultClass='TimetableBo'>
+		SELECT
+		id,
+		week,
+		gradeName,
+		firstClass,
+		secondClass,
+		threeClass,
+		fourClass,
+		fiveClass,
+		sixClass,
+		sevenClass,
+		eightClass,
+		nineClass
+		FROM
+			eeh_Timetable
+		WHERE  id=#id#
+	</select>
+
+<!--查询-->
+<select id='findTimetableList' resultMap='TimetableMap'>
+SELECT
+	id,
+	week,
+	gradeName,
+	firstClass,
+	secondClass,
+	threeClass,
+	fourClass,
+	fiveClass,
+	sixClass,
+	sevenClass,
+	eightClass,
+	nineClass
+FROM
+	eeh_Timetable
+<dynamic prepend="WHERE">
+<isNotEmpty prepend="AND" property="gradeName">
+	gradeName=#gradeName#
+</isNotEmpty>
+</dynamic>
+</select>
+<!--查询个数-->
+	<select id='findTimetableListCount' resultClass='java.lang.Integer'>
+		SELECT
+		count(0)
+		FROM
+		eeh_Timetable
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="gradeName">
+				gradeName=#gradeName#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+<!--新增-->
+<insert id="add_Timetable" parameterClass="TimetableBo">
+	INSERT INTO
+		eeh_Timetable(
+		week,
+		gradeName,
+		firstClass,
+		secondClass,
+		threeClass,
+		fourClass,
+		fiveClass,
+		sixClass,
+		sevenClass,
+		eightClass,
+		nineClass
+	)VALUES(
+		#week#,
+		#gradeName#,
+		#firstClass#,
+		#secondClass#,
+		#threeClass#,
+		#fourClass#,
+		#fiveClass#,
+		#sixClass#,
+		#sevenClass#,
+		#eightClass#,
+		#nineClass#
+	)
+</insert>
+<!--修改-->
+<update id="upd_Timetable" parameterClass="TimetableBo">
+	UPDATE
+		eeh_Timetable
+	SET
+		week=#week#,
+		gradeName=#gradeName#,
+		firstClass=#firstClass#,
+		secondClass=#secondClass#,
+		threeClass=#threeClass#,
+		fourClass=#fourClass#,
+		fiveClass=#fiveClass#,
+		sixClass=#sixClass#,
+		sevenClass=#sevenClass#,
+		eightClass=#eightClass#,
+		nineClass=#nineClass#
+ 	WHERE
+	ID=#id#
+</update>
+<!--删除-->
+<delete id="del_Timetable" parameterClass="java.util.Map">
+	DELETE FROM
+	eeh_Timetable
+	WHERE
+	ID IN
+	<iterate property="id" conjunction="," close=")" open="(">
+	#id[]#
+	</iterate>
+</delete>
+</sqlMap>

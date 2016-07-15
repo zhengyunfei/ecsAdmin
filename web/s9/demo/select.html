@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+<!-- CSS静态资源的引用 -->
+	<link rel="stylesheet" type="text/css" href="/s9/res/js/ligerUI/skins/Aqua/css/ligerui-all.css"	/>
+	<link rel="stylesheet" type="text/css" href="/s9/res/js/ligerUI/skins/Gray/css/all.css"	/>
+	<!-- JS静态资源的引用 -->
+	<script type="text/javascript" src="/s9/res/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/s9/res/js/ligerUI/js/ligerui.all.js"></script>
+    <script type="text/javascript">
+        $(function ()
+        { 
+            $("#select2").ligerComboBox(); 
+        });
+        function clickee()
+        {
+            alert($("#select2").val());
+        }
+        
+       $(function ()
+        {
+        	var dataGrid = [
+                { id: 1, name: '李三', sex: '男' },
+                { id: 2, name: '李四', sex: '女' },
+                { id: 3, name: '赵武', sex: '女' },
+                { id: 4, name: '陈留', sex: '女' }
+                ];
+            var dataGridColumns = [
+                { header: 'ID', name: 'id', width: 20 },
+                { header: '名字', name: 'name' },
+                { header: '性别', name: 'sex' }
+            ];
+            $("#txtGrid").ligerComboBox({ data: dataGrid, textField: 'name', columns: dataGridColumns, selectBoxWidth: 200, isMultiSelect: true
+            });
+        }); 
+        
+        
+        $(function ()
+        {
+            $("#test1").ligerComboBox({  
+                data: [
+                    { text: '张三', id: '1' },
+                    { text: '李四', id: '2' },
+                    { text: '赵武', id: '44' }
+                ], valueFieldID: 'test3'
+            }); 
+        });
+        function clickee3()
+        {
+            alert($("#test3").val());
+        }
+        
+        
+        
+         $(function ()
+        {
+            var proData = 
+            [{ id: 1, text: '广东' }, 
+            { id: 2, text: '福建'}];
+            var cityData =
+            [{ id: 1, text: '潮州', pid: 1 },
+            { id: 2, text: '福州', pid: 2 },
+            { id: 3, text: '广州', pid: 1 }, 
+            { id: 4, text: '厦门', pid: 2 }];
+
+
+            $("#city").ligerComboBox({ data: null, isMultiSelect: true, isShowCheckBox: true });
+
+            $("#pro").ligerComboBox({
+                data: proData, isMultiSelect: false,
+                onSelected: function (newvalue)
+                {
+                    var newData = new Array();
+                    for (i = 0; i < cityData.length; i++)
+                    {
+                        if (cityData[i].pid == newvalue)
+                        {
+                            newData.push(cityData[i]);
+                        }
+                    }
+                    liger.get("city").setData(newData);
+                }
+            });
+            
+             
+        }); 
+        
+    </script>
+</head>
+<body style="padding:10px"> 
+ <h3>普通下拉框</h3>   
+        <select name="select2" id="select2" >
+				<option value="opt1">Big Option test line with more wordssss</option>
+				<option value="opt2">Option 2</option>
+				<option value="opt3">Option 3</option>
+				<option value="opt4">Option 4</option>
+				<option value="opt5">Option 5</option>
+				<option value="opt6">Option 6</option>
+				<option value="opt7">Option 7</option>
+				<option value="opt8">Option 8</option>
+			</select> 
+      <br />
+         
+<a href="javascript:clickee()" class="l-button" style="width:100px">获取</a> 
+ <div style="display:none;">
+ 
+</div>
+<br/>
+<br/>
+
+<div>
+
+ <h3>表格多选</h3>   
+   <input type="text" id="txtGrid"/>
+   <br />   
+ <div style="display:none;">
+</div>
+
+<div>
+<h3>单选</h3> 
+ <input type="text" id="test1" />
+       <input type="hidden" id="test2" />
+      <br />    
+<a href="javascript:clickee3()" class="l-button" style="width:100px">获取</a>
+<br /><br /><br /><br />
+ <div style="display:none;">
+ 
+</div>
+</div>
+
+<div>
+
+<h3>联动效果</h3>   
+   <input type="text" id="pro"/>
+   <br />
+   <input type="text" id="city"/>
+    <br />
+     
+ <div style="display:none;">
+ 
+</div>
+</div>
+</body>
+</html>

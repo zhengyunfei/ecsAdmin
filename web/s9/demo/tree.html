@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="overflow: hidden"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>元素样式</title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+<!-- CSS静态资源的引用 -->
+	<link rel="stylesheet" type="text/css" href="/s9/res/js/ligerUI/skins/Aqua/css/ligerui-all.css"	/>
+	<link rel="stylesheet" type="text/css" href="/s9/res/js/ligerUI/skins/Gray/css/all.css"	/>
+<!-- JS静态资源的引用 -->
+<script type="text/javascript" src="/s9/res/js/jquery.min.js"></script>
+<script type="text/javascript" src="/s9/res/js/ligerUI/js/ligerui.all.js"></script>
+ <script type="text/javascript">
+    var treeManger;
+	$(function(){
+		initOgrTree();
+	});
+	
+	/**
+	 * @title : 以树的形式展示组织机构  
+	 * */
+	function initOgrTree(){
+		var url = "/c/organ/findOrgTree";
+		$.ajax({
+			type:"post",
+			url: url,
+			async : false,
+			success:function(data){
+				var treeData = [];
+				treeData.push( {
+					'id' : '99999',
+					'icon' : '',
+					'text' : '机构列表',
+					'isexpand' : true,
+					'pid' : ""
+				});
+				var orgMenuList = data.orgList;
+				for(var i=0;i<orgMenuList.length;i++){
+					treeData.push( {
+						'id' : orgMenuList[i].organId,
+						'icon' : '',
+						'text' : orgMenuList[i].organName,
+						'isexpand' : false,
+						'pid' : orgMenuList[i].parentId,
+						'organType':orgMenuList[i].organType
+					});
+				}
+				loadTree(treeData);
+			}
+		});
+	}
+	//加载树
+	function loadTree(dataTree) {
+		treeManger = $("#orgTree").ligerTree( {
+			data : dataTree,
+			idFieldName : 'id',
+			parentIDFieldName : 'pid',
+			checkbox : false,
+			slide : true,
+			nodeWidth : 180,
+			onClick : onclick
+		});
+	}
+	/**
+	 * 选择节点 获取 父机构ID 类型
+	 * @param note
+	 * @return
+	 */
+	function onclick(note){
+		var parentId = note.data.id;
+
+	}
+     </script>
+</head>
+<body style="padding:10px;  padding-bottom:40px; ">
+
+    <div class="z-legend" style="width: 300"><b>机构列表</b></div>
+	<div id="orgTree"  style="height: 500px"></div>
+    <div style="display:none;"></div>
+  
+  
+</body>
+</html>
+    

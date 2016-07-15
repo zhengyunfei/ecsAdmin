@@ -1,0 +1,64 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+	<!-- 评论信息实体类(Comment) -->
+	<typeAlias alias="comment" type="com.zero2ipo.plugins.comment.bo.Comment" />
+
+	<!-- 评论信息实体映射集合 -->
+	<resultMap id="commentList" class="Comment">
+		<result property="commentId" column="COMMENT_ID" />
+		<result property="vipId" column="VIP_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="commentDate" column="COMMENT_DATE" />
+		<result property="commentLevel" column="COMMENT_LEVEL" />
+		<result property="status" column="STATUS" />
+	</resultMap>
+
+	<!--评论列表信息查询 -->
+	<select id="findCommentInfoList" resultMap="commentList">
+		SELECT C.COMMENT_ID, C.VIP_ID, C.CONTENT, C.COMMENT_DATE,
+		C.COMMENT_LEVEL, C.STATUS FROM s9_sys_comment C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="status">
+				INSTR(C.STATUS,#status#)>0</isNotEmpty>
+			<isNotEmpty prepend="AND" property="commentLevel">
+				INSTR(C.COMMENT_LEVEL,#commentLevel#)>0</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<!-- 根据评论标识查询系统用户信息 -->
+	<select id="findCommentById" resultMap="commentList"> SELECT C.COMMENT_ID, C.VIP_ID, C.CONTENT, C.COMMENT_DATE,
+		C.COMMENT_LEVEL, C.STATUS FROM s9_sys_comment C WHERE
+		C.COMMENT_ID = #commentId#</select>
+
+	<!-- 评论信息列表    总条数查询 -->
+	<select id="findCommentInfoListCount" resultClass="java.lang.Integer">
+		SELECT COUNT(0) FROM s9_sys_comment C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="status">
+				INSTR(C.STATUS,#status#)>0</isNotEmpty>
+			<isNotEmpty prepend="AND" property="commentLevel">
+				INSTR(C.COMMENT_LEVEL,#commentLevel#)>0</isNotEmpty>
+		</dynamic>
+	</select>
+
+  	<!-- 评论信息    新增 -->
+	<insert id="addComment" parameterClass="comment"> INSERT INTO S9_SYS_COMMENT
+		(COMMENT_ID, VIP_ID, CONTENT, COMMENT_DATE,
+		COMMENT_LEVEL, STATUS) VALUES (#commentId#,
+		#vipId#, #content#, #commentDate#, #commentLevel#, #status#)</insert>
+
+	<!-- 评论信息	修改 -->
+	<update id="updComment" parameterClass="comment">
+		UPDATE S9_SYS_COMMENT SET CONTENT=#content#, COMMENT_LEVEL=#commentLevel#,
+		STATUS=#status#,COMMENT_DATE=#commentDate#,VIP_ID=#vipId# WHERE COMMENT_ID = #commentId#
+	</update>
+
+	<!-- 评论信息	删除 -->
+	<delete id="delComment" parameterClass="java.util.Map">
+		DELETE FROM S9_SYS_COMMENT WHERE COMMENT_ID IN
+		<iterate property="commentId" conjunction="," close=")" open="(">
+			#commentId[]#</iterate>
+	</delete>
+</sqlMap>

@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="overflow: hidden"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>元素样式</title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  	<!-- CSS静态资源的引用 -->
+	<link rel="stylesheet" type="text/css" href="/s9/res/css/skin.css">
+	<link rel="stylesheet" type="text/css" href="/s9/res/css/spirites.css" >
+	<link rel="stylesheet" type="text/css" href="/s9/res/css/common.css" >
+	<link rel="stylesheet" type="text/css" href="/s9/res/css/default.css">
+	<link href="/s9/res/js/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+	<link href="/s9/res/js/ligerUI/skins/Gray/css/all.css" rel="stylesheet" type="text/css" />
+	<!-- JS静态资源的引用 -->
+	<script type="text/javascript" src="/s9/res/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/s9/res/js/ligerUI/js/ligerui.all.js"></script>
+	
+	    <style type="text/css">
+        .l-case-title
+        {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script type="text/javascript">
+         var m;
+        function f_open()
+        {
+          m = $.ligerDialog.open({ height: 200, url: '/s9/demo/success.html', width: null, showMax: true, showToggle: true, showMin: true, isResize: true, slide: false }); 
+        }
+        function f_open3()
+        {
+          m=  $.ligerDialog.open({ height: 200, url: '/s9/demo/success.html', isResize: true });
+        }
+        function f_open4()
+        {
+          m=  $.ligerDialog.open({ url: '/s9/demo/success.html', width: null, height: 200, modal: false, isResize: true });
+        }
+        function f_open5()
+        {
+          m=  $.ligerDialog.open({ url: '/s9/demo/success.html', height: 200, isResize: true });
+        }
+
+    </script>
+</head>
+<body style="padding: 10px; padding-bottom: 800px;">
+    <div class="l-case-title">
+        实例一(保存window manager)：if (win1) win1.show(); else win1 = $.ligerDialog.open({ height:
+        200, url: '../../welcome.htm', width: null });</div>
+    <input type="button" onclick="f_open()" value="open window" />
+    <div class="l-case-title">
+        实例二：$.ligerDialog.open({ height: 200,url: '../../welcome.htm' });</div>
+    <input type="button" onclick="f_open3()" value="open window" />
+    <div class="l-case-title">
+        实例三：$.ligerDialog.open({ url: '../../welcome.htm', width: null,height:200,modal:false
+        });</div>
+    <input type="button" onclick="f_open4()" value="open noModal window" />
+    <div class="l-case-title">
+        实例四：$.ligerDialog.open({ url: '../../welcome.htm',height: 200, isResize:true });</div>
+    <input type="button" onclick="f_open5()" value="open Resizable window" />
+
+
+     
+</body>
+</html>
+    

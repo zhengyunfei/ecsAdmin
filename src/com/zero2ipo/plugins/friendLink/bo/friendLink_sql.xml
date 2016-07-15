@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="wFriendLink">
+	<typeAlias alias="friendLinkGroup" type="com.zero2ipo.plugins.friendLink.bo.FriendLink"/>
+	<typeAlias alias="friendLinkInfo" type="com.zero2ipo.plugins.friendLink.bo.FriendLinkInfo"/>
+	<resultMap class="com.zero2ipo.plugins.friendLink.bo.FriendLink"  id="friendLinkGroupList">
+		<result property="typeId" column="TYPE_ID" />
+		<result property="typeName" column="TYPE_NAME" />
+		<result property="typeDesc" column="TYPE_DESC" />
+	</resultMap>
+		<resultMap class="com.zero2ipo.plugins.friendLink.bo.FriendLinkInfo" id="friendLinkInfoList">
+		<result property="id" column="ID" />
+		<result property="typeId" column="TYPE_ID"/>
+		<result property="fsiteName" column="FSITE_NAME" />
+		<result property="typeName" column="TYPE_NAME" />
+		<result property="logoUrl" column="LOGO_URL" />
+		<result property="fsiteUrl" column="FSITE_URL" />
+		<result property="validFlag" column="VALID_FLAG" />
+		<result property="addDate" column="ADD_DATE" />
+		<result property="effDate" column="EFF_DATE" />
+		<result property="userId" column="USER_ID" />
+		<result property="remark" column="REMARK" />
+		<result property="userName" column="USER_NAME" />
+	</resultMap>
+	<!-- 查询友情链接信息 -->
+	<select id="queryFriendLinkGroupList" resultMap="friendLinkGroupList" parameterClass="java.lang.String" >
+		SELECT
+			T.TYPE_ID,
+			T.TYPE_NAME,
+			T.TYPE_DESC
+		FROM S9_SYS_FRIENDLINK_GROUP T
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="typeName">
+				<![CDATA[
+					T.TYPE_NAME like '%$typeName$%'
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY T.TYPE_ID
+	</select>
+	<!-- 查询友情链接记录总数 -->
+	<select id="queryFriendLinkGroupCount" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+		SELECT COUNT(1)
+		FROM S9_SYS_FRIENDLINK_GROUP T
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="typeName">
+				<![CDATA[
+					T.TYPE_NAME like '%$typeName$%'
+				]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+		<!-- 添加友情链接分组信息 -->
+	<insert id="saveFriendLinkGroup" parameterClass="friendLinkGroup">
+		INSERT INTO S9_SYS_FRIENDLINK_GROUP
+			(TYPE_ID,
+			TYPE_NAME,
+			TYPE_DESC)
+		VALUES (#typeId#,
+			#typeName#,
+			#typeDesc#)
+	</insert>
+	<!-- 修改友情链接分组信息 -->
+	<update id="updFriendLinkGroup" parameterClass="friendLinkGroup">
+		UPDATE S9_SYS_FRIENDLINK_GROUP
+		SET TYPE_NAME = #typeName#,
+			TYPE_DESC = #typeDesc#
+		WHERE TYPE_ID = #typeId#
+	</update>
+	<!-- 删除友情链接分组信息 -->
+	<delete id="deleteFriendLinkGroup" parameterClass="java.util.Map">
+		DELETE FROM S9_SYS_FRIENDLINK_GROUP WHERE TYPE_ID IN
+		<iterate property="typeId" conjunction="," close=")" open="(">
+			#typeId[]#
+		</iterate>
+	</delete>
+		<!-- 删除友情链接信息 -->
+	<delete id="deleteFriendLinkInfoByTypeId" parameterClass="java.util.Map">
+		DELETE FROM S9_SYS_FRIENDLINK WHERE ID IN
+		<iterate property="typeId" conjunction="," close=")" open="(">
+			#typeId[]#
+		</iterate>
+	</delete>
+	<!-- 查询友情链接信息列表 -->
+	<select id="queryFriendLinkInfoList" resultMap="friendLinkInfoList">
+		SELECT
+			W.ID,
+			T.TYPE_ID,
+			T.TYPE_NAME,
+			W.FSITE_NAME,
+			W.LOGO_URL,
+			W.FSITE_URL,
+			W.VALID_FLAG,
+			W.ADD_DATE,
+			W.EFF_DATE,
+			O.USER_ID,
+			O.USER_NAME,
+			W.REMARK
+		FROM S9_SYS_FRIENDLINK_GROUP T,S9_SYS_FRIENDLINK W,S9_SYS_USER O
+		WHERE T.TYPE_ID=W.TYPE_ID 
+		AND O.USER_ID=W.USER_ID
+		AND W.TYPE_ID=#typeId#
+		ORDER BY W.ID
+	</select>
+	<!-- 查询友情链接记录总数 -->
+	<select id="queryFriendLinkInfoCount" resultClass="java.lang.Integer">
+		SELECT COUNT(1)
+		FROM S9_SYS_FRIENDLINK T
+		WHERE T.TYPE_ID=#typeId#
+	</select>
+	<!-- 查询友情链接信息 -->
+	<select id="queryFriendLinkInfo" resultMap="friendLinkInfoList">
+		SELECT
+			W.ID,
+			T.TYPE_ID,
+			T.TYPE_NAME,
+			W.FSITE_NAME,
+			W.LOGO_URL,
+			W.FSITE_URL,
+			W.VALID_FLAG,
+			DATE_FORMAT(W.ADD_DATE,'%Y-%m-%d') AS ADD_DATE,
+			DATE_FORMAT(W.EFF_DATE,'%Y-%m-%d') AS EFF_DATE,
+			O.USER_ID,
+			O.USER_NAME,
+			W.REMARK
+		FROM S9_SYS_FRIENDLINK_GROUP T,S9_SYS_FRIENDLINK W,S9_SYS_USER O
+		WHERE T.TYPE_ID=W.TYPE_ID 
+		AND O.USER_ID=W.USER_ID
+		AND W.ID=#id#
+	</select>
+	<!-- 添加友情链接信息 -->
+	<insert id="saveFriendLinkInfo" parameterClass="friendLinkInfo">
+		INSERT INTO S9_SYS_FRIENDLINK
+			(ID,
+			TYPE_ID,
+			USER_ID,
+			USER_NAME,
+			FSITE_NAME,
+			FSITE_URL,
+			LOGO_URL,
+			VALID_FLAG,
+			ADD_DATE,
+			EFF_DATE,
+			REMARK)
+		VALUES (#id#,
+			#typeId#,
+			#userId#,
+			#userName#,
+			#fsiteName#,
+			#fsiteUrl#,
+			#logoUrl#,
+			#validFlag#,
+			#addDate#,
+			#effDate#,
+			#remark#)
+	</insert>
+	<!-- 修改友情链接信息 -->
+	<update id="updFriendLinkInfo" parameterClass="friendLinkInfo">
+		UPDATE S9_SYS_FRIENDLINK
+		SET TYPE_ID = #typeId#,
+			USER_ID = #userId#,
+			USER_NAME = #userName#,
+			FSITE_NAME = #fsiteName#,
+			FSITE_URL = #fsiteUrl#,
+			LOGO_URL = #logoUrl#,
+			VALID_FLAG = #validFlag#,
+			ADD_DATE = #addDate#,
+			EFF_DATE = #effDate#,
+			REMARK = #remark#
+		WHERE ID = #id#
+	</update>
+	<!-- 删除友情链接信息 -->
+	<delete id="deleteFriendLinkInfo" parameterClass="java.util.Map">
+		DELETE FROM S9_SYS_FRIENDLINK WHERE ID IN
+		<iterate property="id" conjunction="," close=")" open="(">
+			#id[]#
+		</iterate>
+	</delete>
+</sqlMap>
